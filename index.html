@@ -8,9 +8,8 @@
 </head>
 <body>
     <header>
-        <h1>🍔 快速點餐系統</h1>
-        <button onclick="toggleMode()" style="background: #666; color: white;">切換模式</button>
-        <p id="mode-status">目前模式：使用者 (點餐)</p>
+        <h1>胖可朗的點餐系統</h1>
+        <button id="mode-status" onclick="toggleMode()" style="background: #666; color: white;">使用者</button>
     </header>
 
     <section id="dev-section" style="display:none; background: #eee; padding: 15px; border: 2px dashed #999; margin: 10px 0;">
@@ -19,11 +18,11 @@
         <input type="number" id="new-item-price" placeholder="價格">
         <button class="btn-add" onclick="addMenuItem()">新增到菜單</button>
     </section>
+
     <main>
         <section id="menu">
             <h2>美味菜單</h2>
-            <div id="menu-items">
-                </div>
+            <div id="menu-items"></div>
         </section>
 
         <hr>
@@ -36,6 +35,24 @@
             <button class="btn-checkout" onclick="checkout()">送出訂單</button>
         </section>
     </main>
+
+    <div id="order-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-item-name">品項名稱</h3>
+            <p>單價：$<span id="modal-item-price">0</span></p>
+            
+            <div class="quantity-control">
+                <button onclick="changeQty(-1)">-</button>
+                <input type="number" id="modal-qty" value="1" readonly>
+                <button onclick="changeQty(1)">+</button>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">取消</button>
+                <button class="btn-confirm" onclick="confirmAddToCart()">加入購物車</button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
