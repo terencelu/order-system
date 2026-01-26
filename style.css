@@ -1,0 +1,8 @@
+body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+#menu-items { display: grid; gap: 10px; }
+.menu-item { background: white; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+button { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+.btn-add { background: #28a745; color: white; }
+.btn-clear { background: #dc3545; color: white; }
+.btn-checkout { background: #007bff; color: white; width: 100%; margin-top: 10px; font-size: 1.2em; }
+#cart { background: white; padding: 15px; margin-top: 20px; border-radius: 8px; }
