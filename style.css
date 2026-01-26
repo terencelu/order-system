@@ -1,8 +1,32 @@
 body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
 #menu-items { display: grid; gap: 10px; }
-.menu-item { background: white; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+/* 讓品項區塊變成可點擊 */
+.menu-item { 
+    background: white; padding: 15px; border-radius: 8px; 
+    display: flex; justify-content: space-between; align-items: center; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer;
+}
+.menu-item:active { background: #f0f0f0; }
+
 button { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
 .btn-add { background: #28a745; color: white; }
 .btn-clear { background: #dc3545; color: white; }
 .btn-checkout { background: #007bff; color: white; width: 100%; margin-top: 10px; font-size: 1.2em; }
 #cart { background: white; padding: 15px; margin-top: 20px; border-radius: 8px; }
+
+/* 彈窗樣式 */
+.modal {
+    display: none; position: fixed; z-index: 1000; top: 0; left: 0;
+    width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+    background-color: white; margin: 25% auto; padding: 20px;
+    width: 85%; max-width: 350px; border-radius: 15px; text-align: center;
+}
+.quantity-control { margin: 20px 0; display: flex; justify-content: center; align-items: center; gap: 15px; }
+.quantity-control input { width: 50px; text-align: center; font-size: 1.2rem; border: 1px solid #ccc; }
+.quantity-control button { width: 40px; height: 40px; border-radius: 50%; background: #eee; font-size: 1.2rem; }
+.modal-footer { display: flex; gap: 10px; margin-top: 20px; }
+.btn-cancel { background: #bbb; color: white; flex: 1; }
+.btn-confirm { background: #28a745; color: white; flex: 1; }
