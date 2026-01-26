@@ -9,8 +9,16 @@
 <body>
     <header>
         <h1>🍔 快速點餐系統</h1>
+        <button onclick="toggleMode()" style="background: #666; color: white;">切換模式</button>
+        <p id="mode-status">目前模式：使用者 (點餐)</p>
     </header>
 
+    <section id="dev-section" style="display:none; background: #eee; padding: 15px; border: 2px dashed #999; margin: 10px 0;">
+        <h3>🛠 開發者面板：管理菜單</h3>
+        <input type="text" id="new-item-name" placeholder="品項名稱">
+        <input type="number" id="new-item-price" placeholder="價格">
+        <button class="btn-add" onclick="addMenuItem()">新增到菜單</button>
+    </section>
     <main>
         <section id="menu">
             <h2>美味菜單</h2>

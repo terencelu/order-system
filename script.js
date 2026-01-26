@@ -1,21 +1,64 @@
-const menu = [
-    { id: 1, name: "經典牛肉堡", price: 150 },
-    { id: 2, name: "酥脆炸雞翅", price: 120 },
-    { id: 3, name: "冰美式咖啡", price: 60 }
+// 1. 初始化菜單：優先從 LocalStorage 讀取，若無則使用預設值
+let defaultMenu = [
+    { id: Date.now(), name: "預設漢堡", price: 100 }
 ];
+let menu = JSON.parse(localStorage.getItem('myMenu')) || defaultMenu;
 
-// 初始化渲染菜單
-const menuDiv = document.getElementById('menu-items');
-menu.forEach(item => {
-    menuDiv.innerHTML += `
-        <div class="menu-item">
-            <span>${item.name} - $${item.price}</span>
-            <button class="btn-add" onclick="addToCart(${item.id})">加入</button>
-        </div>
-    `;
-});
+// 2. 模式切換邏輯 (預設使用者模式)
+let isDevMode = false;
 
-// 加入購物車
+function toggleMode() {
+    isDevMode = !isDevMode;
+    document.getElementById('dev-section').style.display = isDevMode ? 'block' : 'none';
+    document.getElementById('mode-status').innerText = isDevMode ? "目前模式：開發者 (編輯菜單)" : "目前模式：使用者 (點餐)";
+    renderMenu();
+}
+
+// 3. 渲染菜單 (根據模式顯示不同按鈕)
+function renderMenu() {
+    const menuDiv = document.getElementById('menu-items');
+    menuDiv.innerHTML = "";
+    
+    menu.forEach((item, index) => {
+        menuDiv.innerHTML += `
+            <div class="menu-item">
+                <span>${item.name} - $${item.price}</span>
+                ${isDevMode ? 
+                    `<button class="btn-clear" onclick="deleteMenuItem(${index})">刪除</button>` : 
+                    `<button class="btn-add" onclick="addToCart(${item.id})">加入</button>`
+                }
+            </div>
+        `;
+    });
+}
+
+// 4. 開發者功能：新增品項
+function addMenuItem() {
+    const name = document.getElementById('new-item-name').value;
+    const price = parseInt(document.getElementById('new-item-price').value);
+    
+    if (name && price) {
+        menu.push({ id: Date.now(), name, price });
+        saveMenu();
+        document.getElementById('new-item-name').value = '';
+        document.getElementById('new-item-price').value = '';
+    } else {
+        alert("請輸入完整的名稱與價格");
+    }
+}
+
+// 5. 開發者功能：刪除品項
+function deleteMenuItem(index) {
+    menu.splice(index, 1);
+    saveMenu();
+}
+
+function saveMenu() {
+    localStorage.setItem('myMenu', JSON.stringify(menu));
+    renderMenu();
+}
+
+// --- 以下為購物車邏輯 (維持不變或微調) ---
 function addToCart(id) {
     let cart = JSON.parse(localStorage.getItem('myCart') || "[]");
     const product = menu.find(p => p.id === id);
@@ -24,36 +67,24 @@ function addToCart(id) {
     renderCart();
 }
 
-// 渲染購物車內容
 function renderCart() {
     const cart = JSON.parse(localStorage.getItem('myCart') || "[]");
     const cartList = document.getElementById('cart-list');
     const totalSpan = document.getElementById('total-price');
-    
     cartList.innerHTML = "";
     let total = 0;
-    cart.forEach((item, index) => {
+    cart.forEach(item => {
         cartList.innerHTML += `<li>${item.name} - $${item.price}</li>`;
         total += item.price;
     });
     totalSpan.innerText = total;
 }
 
-// 清空購物車
 function clearCart() {
     localStorage.removeItem('myCart');
     renderCart();
 }
 
-// 送出訂單 (示範彈窗)
-function checkout() {
-    const cart = JSON.parse(localStorage.getItem('myCart') || "[]");
-    if (cart.length === 0) return alert("購物車是空的喔！");
-    
-    let orderText = "您的訂單如下：\n";
-    cart.forEach(item => orderText += `- ${item.name}\n`);
-    alert(orderText + "\n訂單已暫存，這是一個靜態示範！");
-}
-
-// 網頁開啟時自動讀取一次
+// 初始化頁面
+renderMenu();
 renderCart();
