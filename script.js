@@ -1,18 +1,55 @@
 let defaultMenu = [{ id: Date.now(), name: "原味", price: 50 }];
 let menu = JSON.parse(localStorage.getItem('myMenu')) || defaultMenu;
 let isDevMode = false;
-let currentSelectItem = null; // 暫存目前選中的產品資訊
+let currentSelectItem = null;
 
-// 1. 模式切換
+// 客人名稱初始化 (預設值)
+let customerName = localStorage.getItem('customerName') || "窩母雞抖壓@@";
+document.getElementById('customer-name-btn').innerText = "客人名稱：" + customerName;
+
+// --- 客人名稱功能 ---
+function openCustomerModal() {
+    document.getElementById('customer-name-input').value = (customerName === "窩母雞抖壓@@") ? "" : customerName;
+    document.getElementById('customer-modal').style.display = "block";
+}
+
+function closeCustomerModal() {
+    document.getElementById('customer-modal').style.display = "none";
+}
+
+function saveCustomerName() {
+    const val = document.getElementById('customer-name-input').value.trim();
+    customerName = val ? val : "窩母雞抖壓@@";
+    localStorage.setItem('customerName', customerName);
+    document.getElementById('customer-name-btn').innerText = "客人名稱：" + customerName;
+    closeCustomerModal();
+}
+
+function deleteCustomerName() {
+    customerName = "窩母雞抖壓@@";
+    localStorage.removeItem('customerName');
+    document.getElementById('customer-name-btn').innerText = "客人名稱：" + customerName;
+    closeCustomerModal();
+}
+
+// --- 菜單渲染 ---
 function toggleMode() {
     isDevMode = !isDevMode;
+    
+    // 1. 控制開發者面板顯示
     document.getElementById('dev-section').style.display = isDevMode ? 'block' : 'none';
-    document.getElementById('mode-status').innerText = isDevMode ? "開發者" : "使用者";
-    document.getElementById('mode-status').style = isDevMode ? "background: white; color: #666;" : "background: #666; color: white;";
+    
+    // 2. 控制右下角 Cookie 按鈕顯示 (關鍵改動)
+    document.getElementById('cookie-btn').style.display = isDevMode ? 'block' : 'none';
+    
+    // 3. 更新上方按鈕狀態
+    const btn = document.getElementById('mode-status');
+    btn.innerText = isDevMode ? "開發模式" : "點餐模式";
+    
+    // 重新渲染菜單（確保刪除按鈕正確顯示）
     renderMenu();
 }
 
-// 2. 渲染菜單
 function renderMenu() {
     const menuDiv = document.getElementById('menu-items');
     menuDiv.innerHTML = "";
@@ -20,50 +57,34 @@ function renderMenu() {
         menuDiv.innerHTML += `
             <div class="menu-item" onclick="handleItemClick(${index})">
                 <span>${item.name} - $${item.price}</span>
-                ${isDevMode ? `<button class="btn-clear" onclick="event.stopPropagation(); deleteMenuItem(${index})">刪除</button>` : ''}
-            </div>
-        `;
+                ${isDevMode ? `<button class="btn-clear" style="padding:5px" onclick="event.stopPropagation(); deleteMenuItem(${index})">刪除</button>` : ''}
+            </div>`;
     });
 }
 
 function handleItemClick(index) {
-    if (isDevMode) return; // 開發者模式不跳彈窗
-    openModal(menu[index]);
-}
-
-// 3. 彈窗邏輯
-function openModal(item) {
-    currentSelectItem = item;
-    document.getElementById('modal-item-name').innerText = item.name;
-    document.getElementById('modal-item-price').innerText = item.price;
+    if (isDevMode) return;
+    currentSelectItem = menu[index];
+    document.getElementById('modal-item-name').innerText = currentSelectItem.name;
+    document.getElementById('modal-item-price').innerText = currentSelectItem.price;
     document.getElementById('modal-qty').value = 1;
     document.getElementById('order-modal').style.display = "block";
 }
 
-function closeModal() {
-    document.getElementById('order-modal').style.display = "none";
-}
-
+// --- 點餐邏輯 ---
+function closeModal() { document.getElementById('order-modal').style.display = "none"; }
 function changeQty(amt) {
-    const qtyInput = document.getElementById('modal-qty');
-    let newQty = parseInt(qtyInput.value) + amt;
-    if (newQty < 1) newQty = 1;
-    qtyInput.value = newQty;
+    const input = document.getElementById('modal-qty');
+    let v = parseInt(input.value) + amt;
+    input.value = v < 1 ? 1 : v;
 }
 
-// 4. 購物車邏輯（支援數量合併）
 function confirmAddToCart() {
     const qty = parseInt(document.getElementById('modal-qty').value);
     let cart = JSON.parse(localStorage.getItem('myCart') || "[]");
-    
-    // 檢查購物車內是否有相同 ID 的商品
-    const existingIndex = cart.findIndex(item => item.id === currentSelectItem.id);
-    if (existingIndex > -1) {
-        cart[existingIndex].qty += qty;
-    } else {
-        cart.push({ ...currentSelectItem, qty: qty });
-    }
-    
+    const idx = cart.findIndex(i => i.id === currentSelectItem.id);
+    if (idx > -1) cart[idx].qty += qty;
+    else cart.push({ ...currentSelectItem, qty: qty });
     localStorage.setItem('myCart', JSON.stringify(cart));
     renderCart();
     closeModal();
@@ -71,53 +92,69 @@ function confirmAddToCart() {
 
 function renderCart() {
     const cart = JSON.parse(localStorage.getItem('myCart') || "[]");
-    const cartList = document.getElementById('cart-list');
-    const totalSpan = document.getElementById('total-price');
-    cartList.innerHTML = "";
+    const list = document.getElementById('cart-list');
     let total = 0;
+    list.innerHTML = "";
     cart.forEach(item => {
-        const itemTotal = item.price * item.qty;
-        cartList.innerHTML += `<li>${item.name} x ${item.qty} - $${itemTotal}</li>`;
-        total += itemTotal;
+        list.innerHTML += `<li>${item.name} x ${item.qty} = $${item.price * item.qty}</li>`;
+        total += item.price * item.qty;
     });
-    totalSpan.innerText = total;
+    document.getElementById('total-price').innerText = total;
 }
 
-// 5. 開發者面板功能
+// --- 管理功能 ---
 function addMenuItem() {
-    const name = document.getElementById('new-item-name').value;
-    const price = parseInt(document.getElementById('new-item-price').value);
-    if (name && price) {
-        menu.push({ id: Date.now(), name, price });
-        saveMenu();
-        document.getElementById('new-item-name').value = '';
-        document.getElementById('new-item-price').value = '';
-    } else { alert("請輸入品項名稱與價格"); }
+    const n = document.getElementById('new-item-name').value;
+    const p = parseInt(document.getElementById('new-item-price').value);
+    if (n && p) {
+        menu.push({ id: Date.now(), name: n, price: p });
+        localStorage.setItem('myMenu', JSON.stringify(menu));
+        renderMenu();
+    }
 }
-
-function deleteMenuItem(index) {
-    menu.splice(index, 1);
-    saveMenu();
-}
-
-function saveMenu() {
+function deleteMenuItem(i) {
+    menu.splice(i, 1);
     localStorage.setItem('myMenu', JSON.stringify(menu));
     renderMenu();
 }
 
-function clearCart() {
-    localStorage.removeItem('myCart');
-    renderCart();
+function showLocalStorage() {
+    const list = document.getElementById('cookie-data-list');
+    const cartData = JSON.parse(localStorage.getItem('myCart') || "[]");
+    let html = "<b>菜單資料：</b>";
+    menu.forEach((item, i) => html += `<div class='cookie-item'>${item.name} <button onclick="deleteCookieItem('menu',${i})">X</button></div>`);
+    html += "<br><b>購物車資料：</b>";
+    cartData.forEach((item, i) => html += `<div class='cookie-item'>${item.name} x ${item.qty} <button onclick="deleteCookieItem('cart',${i})">X</button></div>`);
+    list.innerHTML = html;
+    document.getElementById('cookie-modal').style.display = "block";
 }
+
+function closeCookieModal() { document.getElementById('cookie-modal').style.display = "none"; }
+
+function deleteCookieItem(type, i) {
+    if (type === 'menu') {
+        menu.splice(i, 1);
+        localStorage.setItem('myMenu', JSON.stringify(menu));
+        renderMenu();
+    } else {
+        let cart = JSON.parse(localStorage.getItem('myCart') || "[]");
+        cart.splice(i, 1);
+        localStorage.setItem('myCart', JSON.stringify(cart));
+        renderCart();
+    }
+    showLocalStorage();
+}
+
+function clearAllData() { if(confirm("確定清空所有數據？")) { localStorage.clear(); location.reload(); } }
+function clearCart() { localStorage.removeItem('myCart'); renderCart(); }
 
 function checkout() {
     const cart = JSON.parse(localStorage.getItem('myCart') || "[]");
-    if (cart.length === 0) return alert("購物車還空空的喔！");
-    let msg = "訂單明細：\n";
+    if (cart.length === 0) return alert("尚未點餐！");
+    let msg = `【訂單紀錄】\n客人：${customerName}\n----------\n`;
     cart.forEach(item => msg += `${item.name} x ${item.qty} = $${item.price * item.qty}\n`);
-    alert(msg + "\n總計：$" + document.getElementById('total-price').innerText);
+    alert(msg + "\n總額：$" + document.getElementById('total-price').innerText);
 }
 
-// 初始化
 renderMenu();
 renderCart();

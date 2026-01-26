@@ -1,32 +1,47 @@
-body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
-#menu-items { display: grid; gap: 10px; }
+body { font-family: sans-serif; padding: 20px; background: #f4f4f4; padding-bottom: 80px; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 
-/* 讓品項區塊變成可點擊 */
-.menu-item { 
-    background: white; padding: 15px; border-radius: 8px; 
-    display: flex; justify-content: space-between; align-items: center; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer;
+/* 客人名稱大按鈕 */
+#customer-area { margin-bottom: 15px; }
+#customer-name-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
-.menu-item:active { background: #f0f0f0; }
+
+#mode-status { background: #666; color: white; border: none; padding: 8px 12px; border-radius: 5px; }
+#dev-section { background: #eee; padding: 15px; border: 1px dashed #999; margin-bottom: 20px; border-radius: 8px; }
+
+#menu-items { display: grid; gap: 10px; }
+.menu-item { background: white; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
 
 button { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
 .btn-add { background: #28a745; color: white; }
-.btn-clear { background: #dc3545; color: white; }
-.btn-checkout { background: #007bff; color: white; width: 100%; margin-top: 10px; font-size: 1.2em; }
-#cart { background: white; padding: 15px; margin-top: 20px; border-radius: 8px; }
+.btn-clear { background: #dc3545; color: white; flex: 1; }
+.btn-checkout { background: #28a745; color: white; flex: 2; font-size: 1.1em; }
+.cart-buttons { display: flex; gap: 10px; margin-top: 10px; }
 
-/* 彈窗樣式 */
-.modal {
-    display: none; position: fixed; z-index: 1000; top: 0; left: 0;
-    width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);
-}
-.modal-content {
-    background-color: white; margin: 25% auto; padding: 20px;
-    width: 85%; max-width: 350px; border-radius: 15px; text-align: center;
-}
+#cart { background: white; padding: 15px; margin-top: 20px; border-radius: 8px; border-left: 5px solid #007bff; }
+
+/* 彈窗 */
+.modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+.modal-content { background: white; margin: 20% auto; padding: 20px; width: 85%; border-radius: 15px; text-align: center; }
+.modal-content input { width: 80%; padding: 10px; margin: 15px 0; font-size: 1em; }
+
 .quantity-control { margin: 20px 0; display: flex; justify-content: center; align-items: center; gap: 15px; }
-.quantity-control input { width: 50px; text-align: center; font-size: 1.2rem; border: 1px solid #ccc; }
-.quantity-control button { width: 40px; height: 40px; border-radius: 50%; background: #eee; font-size: 1.2rem; }
+.quantity-control input { width: 50px; text-align: center; border: 1px solid #ccc; font-size: 1.2em; }
+
 .modal-footer { display: flex; gap: 10px; margin-top: 20px; }
 .btn-cancel { background: #bbb; color: white; flex: 1; }
 .btn-confirm { background: #28a745; color: white; flex: 1; }
+.btn-delete-name { background: #f44336; color: white; flex: 1; }
+
+#cookie-btn { position: fixed; bottom: 20px; right: 20px; background: #8B4513; color: white; border-radius: 20px; padding: 10px 20px; z-index: 999; border: 2px solid white; }
+#cookie-data-list { text-align: left; max-height: 250px; overflow-y: auto; margin: 15px 0; padding: 5px; border: 1px solid #eee; }
+.cookie-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }

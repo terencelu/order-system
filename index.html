@@ -3,56 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>胖可朗的點餐系統</title>
+    <title>店員接單系統</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>胖可朗的點餐系統</h1>
-        <button id="mode-status" onclick="toggleMode()" style="background: #666; color: white;">使用者</button>
+        <h1>店員點餐紀錄</h1>
+        <button id="mode-status" onclick="toggleMode()">使用者</button>
     </header>
 
-    <section id="dev-section" style="display:none; background: #eee; padding: 15px; border: 2px dashed #999; margin: 10px 0;">
-        <h3>🛠 開發者面板：管理菜單</h3>
+    <section id="dev-section" style="display:none;">
+        <h3>🛠 菜單管理模式</h3>
         <input type="text" id="new-item-name" placeholder="品項名稱">
         <input type="number" id="new-item-price" placeholder="價格">
         <button class="btn-add" onclick="addMenuItem()">新增到菜單</button>
     </section>
 
     <main>
+        <section id="customer-area">
+            <button id="customer-name-btn" onclick="openCustomerModal()">客人名稱：窩母雞抖壓@@</button>
+        </section>
+
         <section id="menu">
-            <h2>美味菜單</h2>
             <div id="menu-items"></div>
         </section>
 
         <hr>
 
         <section id="cart">
-            <h2>🛒 購物車</h2>
+            <h2>🛒 目前點餐清單</h2>
             <ul id="cart-list"></ul>
             <p>總金額：$<span id="total-price">0</span></p>
-            <button class="btn-clear" onclick="clearCart()">清空購物車</button>
-            <button class="btn-checkout" onclick="checkout()">送出訂單</button>
+            <div class="cart-buttons">
+                <button class="btn-clear" onclick="clearCart()">清空重來</button>
+                <button class="btn-checkout" onclick="checkout()">確認送出單據</button>
+            </div>
         </section>
     </main>
+
+    <div id="customer-modal" class="modal">
+        <div class="modal-content">
+            <h3>輸入客人稱呼</h3>
+            <input type="text" id="customer-name-input" placeholder="客人的稱呼">
+            <div class="modal-footer">
+                <button class="btn-delete-name" onclick="deleteCustomerName()">刪除名稱</button>
+                <button class="btn-cancel" onclick="closeCustomerModal()">取消</button>
+                <button class="btn-confirm" onclick="saveCustomerName()">確認</button>
+            </div>
+        </div>
+    </div>
 
     <div id="order-modal" class="modal">
         <div class="modal-content">
             <h3 id="modal-item-name">品項名稱</h3>
             <p>單價：$<span id="modal-item-price">0</span></p>
-            
             <div class="quantity-control">
                 <button onclick="changeQty(-1)">-</button>
                 <input type="number" id="modal-qty" value="1" readonly>
                 <button onclick="changeQty(1)">+</button>
             </div>
-            
             <div class="modal-footer">
                 <button class="btn-cancel" onclick="closeModal()">取消</button>
-                <button class="btn-confirm" onclick="confirmAddToCart()">加入購物車</button>
+                <button class="btn-confirm" onclick="confirmAddToCart()">加入點餐單</button>
             </div>
         </div>
     </div>
+
+    <div id="cookie-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>🍪 系統存儲數據</h3>
+            <div id="cookie-data-list"></div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeCookieModal()">關閉</button>
+                <button class="btn-clear" onclick="clearAllData()">重置整個系統</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="cookie-btn" onclick="showLocalStorage()" style="display:none;">🍪 Cookie</button>
 
     <script src="script.js"></script>
 </body>
