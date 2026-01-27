@@ -1,4 +1,11 @@
-let menu = JSON.parse(localStorage.getItem('myMenu')) || [{ id: Date.now(), name: "原味", price: 50 }];
+let menu = JSON.parse(localStorage.getItem('myMenu')) || [
+    { id: Date.now(), name: "經典藍莓", price: 100 },
+    { id: Date.now(), name: "蘋果肉桂", price: 100 },
+    { id: Date.now(), name: "濃醇可可", price: 100 },
+    { id: Date.now(), name: "奧利濃黑", price: 100 },
+    { id: Date.now(), name: "焦糖海鹽", price: 100 },
+    { id: Date.now(), name: "開心堅果", price: 100 },
+];
 let orders = JSON.parse(localStorage.getItem('myOrders')) || []; // 訂單紀錄
 let isDevMode = false;
 let currentItemIdx = null; 
