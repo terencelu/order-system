@@ -1,47 +1,55 @@
-body { font-family: sans-serif; padding: 20px; background: #f4f4f4; padding-bottom: 80px; }
-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-
-/* 客人名稱大按鈕 */
-#customer-area { margin-bottom: 15px; }
-#customer-name-btn {
-    width: 100%;
-    padding: 15px;
-    font-size: 1.2em;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+:root {
+    --primary: #4361ee; --success: #2ec4b6; --warning: #ff9f1c;
+    --danger: #e71d36; --bg: #f8f9fa; --card: #ffffff; --text: #2b2d42;
 }
 
-#mode-status { background: #666; color: white; border: none; padding: 8px 12px; border-radius: 5px; }
-#dev-section { background: #eee; padding: 15px; border: 1px dashed #999; margin-bottom: 20px; border-radius: 8px; }
+body { font-family: sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; }
+.app-container { max-width: 1200px; margin: 0 auto; padding: 15px; }
 
-#menu-items { display: grid; gap: 10px; }
-.menu-item { background: white; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
+.main-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; }
+.brand h1 { margin: 0; color: var(--primary); }
+.brand h1 span { color: #8d99ae; font-weight: 300; }
 
-button { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
-.btn-add { background: #28a745; color: white; }
-.btn-clear { background: #dc3545; color: white; flex: 1; }
-.btn-checkout { background: #28a745; color: white; flex: 2; font-size: 1.1em; }
-.cart-buttons { display: flex; gap: 10px; margin-top: 10px; }
+.btn-mode { background: white; border: 1px solid var(--primary); color: var(--primary); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: bold; }
 
-#cart { background: white; padding: 15px; margin-top: 20px; border-radius: 8px; border-left: 5px solid #007bff; }
+.dev-panel { background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px dashed var(--primary); }
+.dev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.input-row { display: flex; gap: 5px; margin-top: 10px; }
+.input-row input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; }
 
-/* 彈窗 */
-.modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-.modal-content { background: white; margin: 20% auto; padding: 20px; width: 85%; border-radius: 15px; text-align: center; }
-.modal-content input { width: 80%; padding: 10px; margin: 15px 0; font-size: 1em; }
+.main-layout { display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
+@media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
 
-.quantity-control { margin: 20px 0; display: flex; justify-content: center; align-items: center; gap: 15px; }
-.quantity-control input { width: 50px; text-align: center; border: 1px solid #ccc; font-size: 1.2em; }
+.customer-card { background: var(--card); padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; align-items: center; margin-bottom: 20px; }
+.customer-card .label { background: var(--primary); color: white; padding: 4px 10px; border-radius: 6px; margin-right: 15px; }
+#customer-name-input-main { flex: 1; border: none; font-size: 18px; font-weight: bold; outline: none; }
 
+.menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+.menu-item { background: var(--card); padding: 20px 10px; border-radius: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer; border-bottom: 4px solid var(--primary); }
+
+.cart-card, .history-card { background: var(--card); border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 20px; }
+.card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+.cart-items { list-style: none; padding: 0; max-height: 200px; overflow-y: auto; }
+.cart-items li { padding: 8px 0; border-bottom: 1px solid #f9f9f9; display: flex; justify-content: space-between; }
+
+.total-row { display: flex; justify-content: space-between; font-size: 1.2em; font-weight: bold; margin: 15px 0; }
+.total-amount { color: var(--danger); }
+.btn-checkout-big { width: 100%; background: var(--success); color: white; border: none; padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; }
+
+.history-container { max-height: 400px; overflow-y: auto; }
+.history-item { padding: 12px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid #ccc; }
+.status-working { border-left-color: var(--warning); background: #fffcf5; }
+.status-done { border-left-color: var(--success); background: #f6fff9; opacity: 0.8; }
+
+.modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+.modal-content { background: white; margin: 15% auto; padding: 25px; width: 85%; max-width: 400px; border-radius: 20px; text-align: center; }
 .modal-footer { display: flex; gap: 10px; margin-top: 20px; }
-.btn-cancel { background: #bbb; color: white; flex: 1; }
-.btn-confirm { background: #28a745; color: white; flex: 1; }
-.btn-delete-name { background: #f44336; color: white; flex: 1; }
+.modal-footer.vertical { flex-direction: column; }
+.modal-footer button { flex: 1; padding: 12px; }
 
-#cookie-btn { position: fixed; bottom: 20px; right: 20px; background: #8B4513; color: white; border-radius: 20px; padding: 10px 20px; z-index: 999; border: 2px solid white; }
-#cookie-data-list { text-align: left; max-height: 250px; overflow-y: auto; margin: 15px 0; padding: 5px; border: 1px solid #eee; }
-.cookie-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+.btn-confirm { background: var(--success); color: white; border: none; }
+.btn-cancel { background: #bbb; color: white; border: none; }
+.btn-delete-name { background: var(--danger); color: white; border: none; }
+.btn-clear-text { background: none; color: var(--danger); border: none; cursor: pointer; font-weight: bold; }
+
+.cookie-fab { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 25px; background: #7d4f39; border: 2px solid #fff; color: white; font-size: 20px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 999; }
