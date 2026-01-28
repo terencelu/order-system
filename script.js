@@ -7,184 +7,179 @@ let menu = JSON.parse(localStorage.getItem('myMenu')) || [
     { id: Date.now(), name: "開心堅果", price: 100 },
 ];
 let orders = JSON.parse(localStorage.getItem('myOrders')) || [];
-let isDevMode = false;
-let currentItemIdx = null;
-let currentOrderIdx = null;
+let isDev = false;
+let curItemIdx = null;
 
-let customerName = localStorage.getItem('customerName') || "新客人";
-let defaultPrefix = localStorage.getItem('defaultPrefix') || "客人";
-let serialNumber = parseInt(localStorage.getItem('serialNumber')) || 1;
-
-const nameInputMain = document.getElementById('customer-name-input-main');
-nameInputMain.value = customerName;
+// 初始化
+const nameInput = document.getElementById('customer-name-input');
+let curName = localStorage.getItem('curName') || "新客人";
+let prefix = localStorage.getItem('prefix') || "客人";
+let sn = parseInt(localStorage.getItem('sn')) || 1;
+nameInput.value = curName;
 
 function toggleMode() {
-    isDevMode = !isDevMode;
-    document.getElementById('mode-status').innerText = isDevMode ? "開發模式" : "點餐模式";
+    isDev = !isDev;
+    document.getElementById('mode-status').innerText = isDev ? "切換為使用者" : "切換為開發者";
+    document.getElementById('user-name-area').style.display = isDev ? 'none' : 'block';
+    document.getElementById('dev-name-area').style.display = isDev ? 'block' : 'none';
+    document.getElementById('dev-menu-area').style.display = isDev ? 'block' : 'none';
+    document.getElementById('cookie-btn').style.display = isDev ? 'block' : 'none';
     
-    // 開發者模式下：
-    // 1. 隱藏使用者模式的客人名稱輸入區
-    // 2. 顯示開發者設定面板與 Cookie 按鈕
-    document.getElementById('order-section-ui').style.display = isDevMode ? 'none' : 'block';
-    document.getElementById('dev-section').style.display = isDevMode ? 'block' : 'none';
-    document.getElementById('cookie-btn').style.display = isDevMode ? 'block' : 'none';
-    
-    if (isDevMode) {
-        document.getElementById('default-prefix-input').value = defaultPrefix;
-        document.getElementById('serial-num-input').value = serialNumber;
+    if(isDev) {
+        document.getElementById('default-prefix-input').value = prefix;
+        document.getElementById('serial-num-input').value = sn;
     }
     renderMenu();
+    renderOrders();
 }
 
 function manualUpdateName() {
-    customerName = nameInputMain.value;
-    localStorage.setItem('customerName', customerName);
+    curName = nameInput.value;
+    localStorage.setItem('curName', curName);
 }
 
 function saveSerialSettings() {
-    defaultPrefix = document.getElementById('default-prefix-input').value || "客人";
-    serialNumber = parseInt(document.getElementById('serial-num-input').value) || 1;
-    localStorage.setItem('defaultPrefix', defaultPrefix);
-    localStorage.setItem('serialNumber', serialNumber);
-    refreshCustomer();
-    alert("客人名稱設定已儲存！");
-}
-
-function refreshCustomer() {
-    customerName = defaultPrefix + serialNumber;
-    nameInputMain.value = customerName;
-    localStorage.setItem('customerName', customerName);
+    prefix = document.getElementById('default-prefix-input').value;
+    sn = parseInt(document.getElementById('serial-num-input').value);
+    localStorage.setItem('prefix', prefix);
+    localStorage.setItem('sn', sn);
+    curName = prefix + sn;
+    nameInput.value = curName;
+    localStorage.setItem('curName', curName);
+    alert("名稱規則已更新");
 }
 
 function renderMenu() {
-    // 即使在開發模式下 order-section-ui 被隱藏，我們還是要確保 menu 會被渲染，因為使用者切換回來要看到
-    const menuDiv = document.getElementById('menu-items');
-    menuDiv.innerHTML = menu.map((item, index) => `
-        <div class="menu-item" onclick="handleItemClick(${index})">
-            <b>${item.name}</b><br>$${item.price}
-            ${isDevMode ? '<div style="font-size:12px;color:var(--warning)">✏️編輯</div>' : ''}
+    const grid = document.getElementById('menu-grid');
+    grid.innerHTML = menu.map((m, i) => `
+        <div class="menu-item" onclick="handleItemClick(${i})">
+            <b>${m.name}</b>$${m.price}
+            ${isDev ? '<div style="font-size:10px; color:var(--warning)">編輯</div>' : ''}
         </div>`).join("");
 }
 
-// 點擊處理
-function handleItemClick(index) {
-    currentItemIdx = index;
-    if (isDevMode) {
-        document.getElementById('edit-item-name').value = menu[index].name;
-        document.getElementById('edit-item-price').value = menu[index].price;
-        document.getElementById('edit-item-modal').style.display = "block";
+function handleItemClick(i) {
+    curItemIdx = i;
+    if(isDev) {
+        document.getElementById('edit-name').value = menu[i].name;
+        document.getElementById('edit-price').value = menu[i].price;
+        document.getElementById('edit-modal').style.display = 'block';
     } else {
-        document.getElementById('modal-item-name').innerText = menu[index].name;
+        document.getElementById('modal-item-name').innerText = menu[i].name;
         document.getElementById('modal-qty').value = 1;
-        document.getElementById('order-modal').style.display = "block";
+        document.getElementById('order-modal').style.display = 'block';
     }
 }
 
-// 訂單歷史紀錄
-function renderOrders() {
-    document.getElementById('history-list').innerHTML = orders.map((o, i) => `
-        <div class="history-item ${o.status === '製作中' ? 'status-working' : 'status-done'}" onclick="openOrderStatus(${i})">
-            <div><b>${o.name}</b> <small>$${o.price}</small><br><span style="font-size:13px">${o.content}</span></div>
-            <span style="font-size:12px; font-weight:bold">${o.status}</span>
-        </div>`).join("");
-}
-
-// 其餘功能 (checkout, confirmAddToCart, modal controls, etc.) 保持先前穩定版本邏輯
 function checkout() {
     const cart = JSON.parse(localStorage.getItem('myCart') || "[]");
-    if (cart.length === 0) return alert("清單是空的");
-    const newOrder = {
-        name: customerName,
-        content: cart.map(i => `${i.name}x${i.qty}`).join(", "),
-        price: document.getElementById('total-price').innerText,
-        status: "製作中", timestamp: Date.now()
+    if(!cart.length) return alert("清單為空");
+    
+    const order = {
+        name: curName,
+        content: cart.map(c => `${c.name}x${c.qty}`).join(", "),
+        total: document.getElementById('total-price').innerText,
+        status: "製作中",
+        id: Date.now()
     };
-    orders.unshift(newOrder);
+    
+    orders.unshift(order);
     localStorage.setItem('myOrders', JSON.stringify(orders));
-    serialNumber++;
-    localStorage.setItem('serialNumber', serialNumber);
-    refreshCustomer();
+    sn++;
+    localStorage.setItem('sn', sn);
+    curName = prefix + sn;
+    nameInput.value = curName;
+    localStorage.setItem('curName', curName);
     clearCart();
     renderOrders();
 }
 
-function openOrderStatus(index) {
-    currentOrderIdx = index;
-    const o = orders[index];
-    document.getElementById('status-edit-name').value = o.name;
-    document.getElementById('status-edit-content').value = o.content;
-    document.getElementById('status-edit-price').value = o.price;
-    document.getElementById('btn-toggle-status').innerText = `切換為: ${o.status === '製作中' ? '製作完成' : '製作中'}`;
-    document.getElementById('order-status-modal').style.display = "block";
+function renderOrders() {
+    const list = document.getElementById('history-list');
+    document.getElementById('history-count').innerText = orders.length;
+    list.innerHTML = orders.map((o, i) => `
+        <div class="history-item ${o.status}" onclick="handleOrderAction(${i})">
+            <b>${o.name}</b> - $${o.total} <span class="badge" style="float:right">${o.status}</span><br>
+            <small>${o.content}</small>
+            ${isDev ? '<div style="color:var(--danger); font-size:11px; margin-top:5px">點擊刪除紀錄</div>' : ''}
+        </div>`).join("");
 }
 
-function toggleOrderStatus() {
-    orders[currentOrderIdx].status = (orders[currentOrderIdx].status === "製作中") ? "製作完成" : "製作中";
-    localStorage.setItem('myOrders', JSON.stringify(orders));
-    renderOrders(); closeStatusModal();
-}
-
-function saveOrderEdit() {
-    orders[currentOrderIdx].name = document.getElementById('status-edit-name').value;
-    orders[currentOrderIdx].content = document.getElementById('status-edit-content').value;
-    orders[currentOrderIdx].price = document.getElementById('status-edit-price').value;
-    localStorage.setItem('myOrders', JSON.stringify(orders));
-    renderOrders(); closeStatusModal();
-}
-
-function deleteOrderRecord() {
-    if(confirm("刪除此紀錄？")) { orders.splice(currentOrderIdx, 1); localStorage.setItem('myOrders', JSON.stringify(orders)); renderOrders(); closeStatusModal(); }
+function handleOrderAction(i) {
+    if(isDev) {
+        if(confirm("確定刪除此歷史紀錄？")) {
+            orders.splice(i, 1);
+            localStorage.setItem('myOrders', JSON.stringify(orders));
+            renderOrders();
+        }
+    } else {
+        // 使用者模式切換狀態
+        orders[i].status = (orders[i].status === "製作中") ? "製作完成" : "製作中";
+        localStorage.setItem('myOrders', JSON.stringify(orders));
+        renderOrders();
+    }
 }
 
 function addMenuItem() {
     const n = document.getElementById('new-item-name').value;
     const p = document.getElementById('new-item-price').value;
-    if (n && p) { 
-        menu.push({ id: Date.now(), name: n, price: p }); 
-        localStorage.setItem('myMenu', JSON.stringify(menu)); 
-        document.getElementById('new-item-name').value = "";
-        document.getElementById('new-item-price').value = "";
-        renderMenu(); 
+    if(n && p) {
+        menu.push({ id: Date.now(), name: n, price: p });
+        localStorage.setItem('myMenu', JSON.stringify(menu));
+        renderMenu();
     }
 }
 
-function confirmDeleteMenu() {
-    if(confirm("刪除口味？")) { menu.splice(currentItemIdx, 1); localStorage.setItem('myMenu', JSON.stringify(menu)); renderMenu(); closeEditModal(); }
+function deleteMenu() {
+    if(confirm("刪除口味？")) {
+        menu.splice(curItemIdx, 1);
+        localStorage.setItem('myMenu', JSON.stringify(menu));
+        renderMenu();
+        closeModal();
+    }
 }
 
 function saveMenuEdit() {
-    menu[currentItemIdx].name = document.getElementById('edit-item-name').value;
-    menu[currentItemIdx].price = document.getElementById('edit-item-price').value;
-    localStorage.setItem('myMenu', JSON.stringify(menu)); renderMenu(); closeEditModal();
+    menu[curItemIdx].name = document.getElementById('edit-name').value;
+    menu[curItemIdx].price = document.getElementById('edit-price').value;
+    localStorage.setItem('myMenu', JSON.stringify(menu));
+    renderMenu();
+    closeModal();
 }
 
-function showLocalStorage() {
-    if(confirm(`目前有 ${menu.length} 個口味與 ${orders.length} 筆紀錄。\n是否重置整個系統？`)) { localStorage.clear(); location.reload(); }
+// 輔助函式
+function closeModal() { 
+    document.getElementById('order-modal').style.display = 'none'; 
+    document.getElementById('edit-modal').style.display = 'none'; 
 }
-
-function closeModal() { document.getElementById('order-modal').style.display = "none"; }
-function closeEditModal() { document.getElementById('edit-item-modal').style.display = "none"; }
-function closeStatusModal() { document.getElementById('order-status-modal').style.display = "none"; }
-function changeQty(amt) { let input = document.getElementById('modal-qty'); input.value = Math.max(1, parseInt(input.value) + amt); }
-function clearCart() { localStorage.removeItem('myCart'); renderCart(); }
+function changeQty(v) { 
+    const i = document.getElementById('modal-qty');
+    i.value = Math.max(1, parseInt(i.value) + v);
+}
 function confirmAddToCart() {
-    const qty = parseInt(document.getElementById('modal-qty').value);
-    const item = menu[currentItemIdx];
+    const q = parseInt(document.getElementById('modal-qty').value);
+    const item = menu[curItemIdx];
     let cart = JSON.parse(localStorage.getItem('myCart') || "[]");
-    const idx = cart.findIndex(c => c.name === item.name);
-    if (idx > -1) cart[idx].qty += qty;
-    else cart.push({ ...item, qty: qty });
+    cart.push({ name: item.name, qty: q, price: item.price });
     localStorage.setItem('myCart', JSON.stringify(cart));
-    renderCart(); closeModal();
+    renderCart();
+    closeModal();
 }
 function renderCart() {
     const cart = JSON.parse(localStorage.getItem('myCart') || "[]");
-    let total = 0;
-    document.getElementById('cart-list').innerHTML = cart.map(i => {
-        total += i.price * i.qty;
-        return `<li><span>${i.name} x ${i.qty}</span><span>$${i.price * i.qty}</span></li>`;
+    let t = 0;
+    document.getElementById('cart-list').innerHTML = cart.map(c => {
+        t += c.price * c.qty;
+        return `<li>${c.name} x ${c.qty} <span>$${c.price * c.qty}</span></li>`;
     }).join("");
-    document.getElementById('total-price').innerText = total;
+    document.getElementById('total-price').innerText = t;
 }
+function clearCart() { localStorage.removeItem('myCart'); renderCart(); }
+function showLocalStorage() { if(confirm("重置所有資料？")) { localStorage.clear(); location.reload(); } }
 
-renderMenu(); renderCart(); renderOrders();
+// 點擊 Modal 外部關閉
+window.onclick = function(event) { if (event.target.className === 'modal') closeModal(); }
+
+renderMenu();
+renderCart();
+renderOrders();
