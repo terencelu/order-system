@@ -3,109 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>店員接單系統 v3</title>
+    <title>胖可朗 POS 系統</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>店員點餐紀錄</h1>
-        <button id="mode-status" onclick="toggleMode()">點餐模式</button>
-    </header>
+    <div class="app-container">
+        <header class="main-header">
+            <div class="brand"><h1>胖可朗 <span>POS</span></h1></div>
+            <button id="mode-status" class="btn-mode" onclick="toggleMode()">點餐模式</button>
+        </header>
 
-    <main>
-        <section id="customer-area">
-            <div class="input-group">
-                <span class="input-label">客人：</span>
-                <input type="text" id="customer-name-input-main" oninput="manualUpdateName()" placeholder="輸入客人稱呼...">
-            </div>
-            <div id="dev-serial-set" style="display:none;">
-                <input type="text" id="default-prefix-input" placeholder="預設前綴">
-                <input type="number" id="serial-num-input" placeholder="序號">
-                <button class="btn-confirm" onclick="saveSerialSettings()">套用設定</button>
-            </div>
-        </section>
-
-        <section id="menu">
-            <div id="menu-items"></div>
-            <div id="dev-add-item" style="display:none;">
-                <div class="menu-item add-new-box">
-                    <input type="text" id="new-item-name" placeholder="新口味名稱">
-                    <input type="number" id="new-item-price" placeholder="價格">
-                    <button class="btn-add" onclick="addMenuItem()">新增口味</button>
+        <section id="dev-section" class="dev-panel" style="display:none;">
+            <div class="dev-grid">
+                <div class="dev-card">
+                    <h4>👤 客人名稱設定</h4>
+                    <div class="input-row">
+                        <input type="text" id="default-prefix-input" placeholder="前綴(如:外帶)">
+                        <input type="number" id="serial-num-input" placeholder="序號">
+                    </div>
+                    <button class="btn-confirm btn-full" onclick="saveSerialSettings()">套用名稱設定</button>
+                </div>
+                <div class="dev-card">
+                    <h4>➕ 新增口味</h4>
+                    <div class="input-row">
+                        <input type="text" id="new-item-name" placeholder="名稱">
+                        <input type="number" id="new-item-price" placeholder="價格">
+                    </div>
+                    <button class="btn-add btn-full" onclick="addMenuItem()">新增口味</button>
                 </div>
             </div>
         </section>
 
-        <hr>
-
-        <section id="cart">
-            <div class="cart-header">
-                <h2>🛒 目前清單</h2>
-                <div class="cart-buttons-right">
-                    <button class="btn-clear" onclick="clearCart()">清空</button>
-                    <button class="btn-checkout" onclick="checkout()">確認結帳</button>
+        <div class="main-layout">
+            <div class="order-section" id="order-section-ui">
+                <div class="customer-card">
+                    <span class="label">當前客人</span>
+                    <input type="text" id="customer-name-input-main" oninput="manualUpdateName()" placeholder="點擊輸入稱呼...">
                 </div>
+                <div id="menu-items" class="menu-grid"></div>
             </div>
-            <ul id="cart-list"></ul>
-            <p class="total-text">總金額：$<span id="total-price">0</span></p>
-        </section>
 
-        <hr>
+            <div class="side-section">
+                <section class="cart-card">
+                    <div class="card-header">
+                        <h3>🛒 目前清單</h3>
+                        <button class="btn-clear-text" onclick="clearCart()">清空</button>
+                    </div>
+                    <ul id="cart-list" class="cart-items"></ul>
+                    <div class="cart-footer">
+                        <div class="total-row">
+                            <span>總金額</span>
+                            <span class="total-amount">$<span id="total-price">0</span></span>
+                        </div>
+                        <button class="btn-checkout-big" onclick="checkout()">確認結帳並出單</button>
+                    </div>
+                </section>
 
-        <section id="order-history">
-            <h2>📋 訂單紀錄</h2>
-            <div id="history-list"></div>
-        </section>
-    </main>
-
-    <div id="order-modal" class="modal">
-        <div class="modal-content">
-            <h3 id="modal-item-name">口味</h3>
-            <div class="quantity-control">
-                <button onclick="changeQty(-1)">-</button>
-                <input type="number" id="modal-qty" value="1" readonly>
-                <button onclick="changeQty(1)">+</button>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal()">取消</button>
-                <button class="btn-confirm" onclick="confirmAddToCart()">加入清單</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="edit-item-modal" class="modal">
-        <div class="modal-content">
-            <h3>編輯口味資料</h3>
-            <input type="text" id="edit-item-name">
-            <input type="number" id="edit-item-price">
-            <div class="modal-footer">
-                <button class="btn-delete-name" onclick="confirmDeleteMenu()">刪除</button>
-                <button class="btn-cancel" onclick="closeEditModal()">取消</button>
-                <button class="btn-confirm" onclick="saveMenuEdit()">更新</button>
+                <section class="history-card">
+                    <h3>📋 訂單紀錄</h3>
+                    <div id="history-list" class="history-container"></div>
+                </section>
             </div>
         </div>
     </div>
 
-    <div id="order-status-modal" class="modal">
-        <div class="modal-content">
-            <h3>訂單管理</h3>
-            <div id="status-edit-fields">
-                <input type="text" id="status-edit-name" placeholder="客人稱呼">
-                <textarea id="status-edit-content" rows="3" placeholder="口味詳情"></textarea>
-                <input type="number" id="status-edit-price" placeholder="金額">
-            </div>
-            <div class="modal-footer vertical">
-                <button class="btn-confirm" id="btn-toggle-status" onclick="toggleOrderStatus()">切換狀態</button>
-                <div class="horizontal">
-                    <button class="btn-confirm" style="background:#007bff" onclick="saveOrderEdit()">儲存編輯</button>
-                    <button class="btn-cancel" onclick="closeStatusModal()">關閉</button>
-                </div>
-                <button class="btn-delete-name" onclick="deleteOrderRecord()">刪除紀錄</button>
-            </div>
-        </div>
-    </div>
+    <div id="order-modal" class="modal"><div class="modal-content"><h3 id="modal-item-name"></h3><div class="quantity-control"><button onclick="changeQty(-1)">-</button><input type="number" id="modal-qty" value="1" readonly><button onclick="changeQty(1)">+</button></div><div class="modal-footer"><button class="btn-cancel" onclick="closeModal()">取消</button><button class="btn-confirm" onclick="confirmAddToCart()">加入</button></div></div></div>
+    <div id="edit-item-modal" class="modal"><div class="modal-content"><h3>編輯口味</h3><input type="text" id="edit-item-name"><input type="number" id="edit-item-price"><div class="modal-footer"><button class="btn-delete-name" onclick="confirmDeleteMenu()">刪除</button><button class="btn-confirm" onclick="saveMenuEdit()">更新</button></div></div></div>
+    <div id="order-status-modal" class="modal"><div class="modal-content"><h3>訂單管理</h3><input type="text" id="status-edit-name"><textarea id="status-edit-content" rows="3"></textarea><input type="number" id="status-edit-price"><div class="modal-footer vertical"><button class="btn-confirm" id="btn-toggle-status" onclick="toggleOrderStatus()">切換狀態</button><button class="btn-confirm" style="background:#4361ee" onclick="saveOrderEdit()">儲存</button><button class="btn-delete-name" onclick="deleteOrderRecord()">刪除</button><button class="btn-cancel" onclick="closeStatusModal()">關閉</button></div></div></div>
 
-    <button id="cookie-btn" onclick="showLocalStorage()" style="display:none;">🍪 Cookie</button>
+    <button id="cookie-btn" class="cookie-fab" onclick="showLocalStorage()" style="display:none;">🍪</button>
 
     <script src="script.js"></script>
 </body>
