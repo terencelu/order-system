@@ -10,65 +10,58 @@
     <div class="app-container">
         <header class="main-header">
             <div class="brand"><h1>胖可朗 <span>POS</span></h1></div>
-            <button id="mode-status" class="btn-mode" onclick="toggleMode()">切換為開發者</button>
+            <button id="mode-status" class="btn-mode-toggle" onclick="toggleMode()">⚙️ 開發者模式</button>
         </header>
 
-        <main class="responsive-grid">
-            <section class="card section-customer">
+        <main class="responsive-layout">
+            <section class="card">
                 <h3 class="section-title">👤 客人名稱</h3>
-                <div id="user-name-area">
-                    <input type="text" id="customer-name-input" class="main-input" oninput="manualUpdateName()" placeholder="請輸入客人名稱...">
+                <div id="user-name-ui">
+                    <input type="text" id="customer-name-input" class="input-main" oninput="manualUpdateName()" placeholder="請輸入客人名稱...">
                 </div>
-                <div id="dev-name-area" class="dev-only" style="display:none;">
-                    <div class="input-group">
-                        <label>預設前綴</label>
-                        <input type="text" id="default-prefix-input" placeholder="如：內用">
+                <div id="dev-name-ui" class="dev-box" style="display:none;">
+                    <div class="dev-row">
+                        <div class="dev-col"><label>預設名稱</label><input type="text" id="default-prefix-input"></div>
+                        <div class="dev-col"><label>目前流水號</label><input type="number" id="serial-num-input"></div>
                     </div>
-                    <div class="input-group">
-                        <label>目前序號</label>
-                        <input type="number" id="serial-num-input">
-                    </div>
-                    <button class="btn-save" onclick="saveSerialSettings()">套用設定</button>
+                    <button class="btn-dev-confirm" onclick="saveSerialSettings()">套用設定</button>
                 </div>
             </section>
 
-            <section class="card section-menu">
+            <section class="card">
                 <h3 class="section-title">🍕 菜單</h3>
                 <div id="menu-grid" class="menu-grid"></div>
                 
-                <div id="dev-menu-area" class="dev-only" style="display:none;">
-                    <div class="add-item-box">
+                <div id="dev-menu-ui" class="dev-box" style="display:none; margin-top: 15px;">
+                    <div class="dev-row">
                         <input type="text" id="new-item-name" placeholder="新口味名稱">
                         <input type="number" id="new-item-price" placeholder="價格">
-                        <button class="btn-add-item" onclick="addMenuItem()">＋ 新增口味</button>
                     </div>
+                    <button class="btn-dev-confirm" onclick="addMenuItem()">＋ 新增口味</button>
                 </div>
             </section>
 
-            <section class="card section-orders">
-                <div class="order-tabs">
-                    <h3 class="section-title">🛒 訂單</h3>
-                    <button class="btn-clear" onclick="clearCart()">清空</button>
+            <section class="card">
+                <div class="order-header">
+                    <h3 class="section-title">🛒 訂單清單</h3>
+                    <button class="btn-text-del" onclick="clearCart()">清空</button>
+                </div>
+                <ul id="cart-list" class="cart-list"></ul>
+                <div class="cart-summary">
+                    <div class="total-row">總計：<span>$<span id="total-price">0</span></span></div>
+                    <button class="btn-checkout" onclick="checkout()">確認結帳並出單</button>
                 </div>
 
-                <div class="cart-box">
-                    <ul id="cart-list" class="cart-list"></ul>
-                    <div class="cart-summary">
-                        <span>總計：$<span id="total-price">0</span></span>
-                        <button class="btn-checkout" onclick="checkout()">確認結帳</button>
-                    </div>
-                </div>
-
-                <hr>
+                <hr class="divider">
                 
-                <h3 class="section-title">📋 紀錄 <span id="history-count" class="badge">0</span></h3>
+                <h3 class="section-title">📋 歷史紀錄 <span id="history-count" class="badge">0</span></h3>
                 <div id="history-list" class="history-list"></div>
             </section>
         </main>
     </div>
 
-    <div id="order-modal" class="modal"><div class="modal-content"><h3 id="modal-item-name"></h3><div class="qty-ctrl"><button onclick="changeQty(-1)">-</button><input type="number" id="modal-qty" value="1" readonly><button onclick="changeQty(1)">+</button></div><div class="modal-btns"><button class="btn-cancel" onclick="closeModal()">取消</button><button class="btn-confirm" onclick="confirmAddToCart()">下單</button></div></div></div>
-    <div id="edit-modal" class="modal"><div class="modal-content"><h3>編輯口味</h3><input type="text" id="edit-name"><input type="number" id="edit-price"><div class="modal-btns"><button class="btn-del" onclick="deleteMenu()">刪除</button><button class="btn-confirm" onclick="saveMenuEdit()">更新</button></div></div></div>
+    <div id="order-modal" class="modal"><div class="modal-content"><h3 id="modal-item-name"></h3><div class="qty-control"><button onclick="changeQty(-1)">−</button><input type="number" id="modal-qty" value="1" readonly><button onclick="changeQty(1)">+</button></div><div class="modal-btns"><button class="btn-cancel" onclick="closeModal()">取消</button><button class="btn-confirm" onclick="confirmAddToCart()">加入訂單</button></div></div></div>
+    <div id="edit-modal" class="modal"><div class="modal-content"><h3>編輯口味</h3><input type="text" id="edit-name" class="input-main"><input type="number" id="edit-price" class="input-main"><div class="modal-btns"><button class="btn-del" onclick="deleteMenu()">刪除</button><button class="btn-confirm" onclick="saveMenuEdit()">儲存</button></div></div></div>
 
     <button id="cookie-btn" class="cookie-fab" onclick="showLocalStorage()" style="display:none;">🍪</button>
 
