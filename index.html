@@ -3,67 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>胖可朗 POS 系統</title>
+    <title>胖可朗 POS</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
-        <header class="main-header">
-            <div class="brand"><h1>胖可朗 <span>POS</span></h1></div>
-            <button id="mode-status" class="btn-mode-toggle" onclick="toggleMode()">⚙️ 開發者模式</button>
-        </header>
-
-        <main class="responsive-layout">
-            <section class="card">
-                <h3 class="section-title">👤 客人名稱</h3>
-                <div id="user-name-ui">
-                    <input type="text" id="customer-name-input" class="input-main" oninput="manualUpdateName()" placeholder="請輸入客人名稱...">
-                </div>
-                <div id="dev-name-ui" class="dev-box" style="display:none;">
-                    <div class="dev-row">
-                        <div class="dev-col"><label>預設名稱</label><input type="text" id="default-prefix-input"></div>
-                        <div class="dev-col"><label>目前流水號</label><input type="number" id="serial-num-input"></div>
-                    </div>
-                    <button class="btn-dev-confirm" onclick="saveSerialSettings()">套用設定</button>
-                </div>
-            </section>
-
-            <section class="card">
-                <h3 class="section-title">🍕 菜單</h3>
-                <div id="menu-grid" class="menu-grid"></div>
-                
-                <div id="dev-menu-ui" class="dev-box" style="display:none; margin-top: 15px;">
-                    <div class="dev-row">
-                        <input type="text" id="new-item-name" placeholder="新口味名稱">
-                        <input type="number" id="new-item-price" placeholder="價格">
-                    </div>
-                    <button class="btn-dev-confirm" onclick="addMenuItem()">＋ 新增口味</button>
-                </div>
-            </section>
-
-            <section class="card">
-                <div class="order-header">
-                    <h3 class="section-title">🛒 訂單清單</h3>
-                    <button class="btn-text-del" onclick="clearCart()">清空</button>
-                </div>
-                <ul id="cart-list" class="cart-list"></ul>
-                <div class="cart-summary">
-                    <div class="total-row">總計：<span>$<span id="total-price">0</span></span></div>
-                    <button class="btn-checkout" onclick="checkout()">確認結帳並出單</button>
-                </div>
-
-                <hr class="divider">
-                
-                <h3 class="section-title">📋 歷史紀錄 <span id="history-count" class="badge">0</span></h3>
-                <div id="history-list" class="history-list"></div>
-            </section>
-        </main>
+    <div id="home-screen" class="screen active" onclick="showHomeButtons()">
+        <div class="home-bg"></div>
+        <div class="home-container">
+            <div class="logo-circle">
+                <img src="pic/logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/150?text=Logo'">
+            </div>
+            <h1 style="font-size:3rem; margin:0; letter-spacing:5px;">胖可朗</h1>
+            <div id="home-actions" class="home-btn-group" style="margin-top:20px;">
+                <button class="btn-home grad-blue" onclick="enterMode('fast', event)">快速模式</button>
+                <button class="btn-home grad-green" onclick="enterMode('normal', event)">一般模式</button>
+                <button class="btn-home grad-purple" onclick="enterMode('analysis', event)">分析一下</button>
+            </div>
+        </div>
     </div>
 
-    <div id="order-modal" class="modal"><div class="modal-content"><h3 id="modal-item-name"></h3><div class="qty-control"><button onclick="changeQty(-1)">−</button><input type="number" id="modal-qty" value="1" readonly><button onclick="changeQty(1)">+</button></div><div class="modal-btns"><button class="btn-cancel" onclick="closeModal()">取消</button><button class="btn-confirm" onclick="confirmAddToCart()">加入訂單</button></div></div></div>
-    <div id="edit-modal" class="modal"><div class="modal-content"><h3>編輯口味</h3><input type="text" id="edit-name" class="input-main"><input type="number" id="edit-price" class="input-main"><div class="modal-btns"><button class="btn-del" onclick="deleteMenu()">刪除</button><button class="btn-confirm" onclick="saveMenuEdit()">儲存</button></div></div></div>
+    <div id="app-screen" class="screen">
+        <header style="padding:15px 25px; background:#fff; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ddd;">
+            <h2 onclick="location.reload()" style="margin:0; color:var(--color-blue); cursor:pointer;">胖可朗 POS</h2>
+            <button id="dev-toggle-btn" onclick="toggleDev()" style="padding:8px 15px; border-radius:50px; border:1px solid #ccc; background:#fff;">⚙️ 開發者: OFF</button>
+        </header>
 
-    <button id="cookie-btn" class="cookie-fab" onclick="showLocalStorage()" style="display:none;">🍪</button>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px; padding:20px;">
+            <section class="card">
+                <h3>🍕 選擇口味</h3>
+                <div id="menu-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;"></div>
+                
+                <div id="dev-menu-editor" class="dev-only">
+                    <h4>🛠️ 菜單管理</h4>
+                    <input type="text" id="new-item-name" class="input-modern" placeholder="口味名稱">
+                    <input type="number" id="new-item-price" class="input-modern" placeholder="價格">
+                    <button onclick="addMenuItem()" style="width:100%; padding:10px; background:var(--color-blue); color:white; border:none; border-radius:10px;">＋ 新增口味</button>
+                </div>
+            </section>
+
+            <section class="card">
+                <h3>👤 顧客資訊</h3>
+                <input type="text" id="customer-name-input" class="input-modern" onblur="manualUpdateInfo()" placeholder="顧客名稱">
+                <input type="tel" id="customer-phone-input" class="input-modern" onblur="manualUpdateInfo()" placeholder="聯絡電話">
+                <textarea id="customer-note-input" class="input-modern" onblur="manualUpdateInfo()" placeholder="備註資訊..." rows="2"></textarea>
+                
+                <div id="dev-customer-tools" class="dev-only">
+                    <button onclick="resetSN()" style="width:100%; padding:10px; background:#666; color:white; border:none; border-radius:10px;">重置流水號 (SN:1)</button>
+                </div>
+            </section>
+
+            <section class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h3>🛒 訂單預覽</h3>
+                    <button class="btn-clear-sm" onclick="clearCart()">CLEAR 清空</button>
+                </div>
+                <div class="customer-info-box">
+                    <div id="order-customer-preview" style="font-size:26px; font-weight:900;">讀取中...</div>
+                </div>
+                <ul id="cart-list" style="list-style:none; padding:0; margin-bottom:20px;"></ul>
+                <div style="font-size:30px; font-weight:900; text-align:right;">Total: $<span id="total-price">0</span></div>
+                <button onclick="checkout()" style="width:100%; padding:20px; border:none; border-radius:20px; background:var(--grad-green); color:white; font-size:24px; font-weight:900; cursor:pointer; margin-top:10px;">確認並出單 🚀</button>
+                
+                <hr style="margin:30px 0; border:0; border-top:1px solid #eee;">
+                <h3>📋 目前訂單</h3>
+                <div id="history-list"></div>
+            </section>
+        </div>
+    </div>
+
+    <div id="order-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:#fff; width:90%; max-width:350px; padding:30px; border-radius:30px; text-align:center;">
+            <h2 id="modal-item-name"></h2>
+            <input type="number" id="modal-qty" value="1" readonly style="width:100%; text-align:center; font-size:40px; border:none; font-weight:bold; color:var(--color-blue);">
+            <div class="numpad">
+                <button onclick="setQty('1')">1</button><button onclick="setQty('2')">2</button><button onclick="setQty('3')">3</button>
+                <button onclick="setQty('4')">4</button><button onclick="setQty('5')">5</button><button onclick="setQty('6')">6</button>
+                <button onclick="setQty('7')">7</button><button onclick="setQty('8')">8</button><button onclick="setQty('9')">9</button>
+                <button onclick="setQty('clear')" style="color:red;">C</button><button onclick="setQty('0')">0</button><button onclick="confirmAddToCart()" style="background:var(--color-green); color:white;">OK</button>
+            </div>
+            <button onclick="closeModal()" style="margin-top:15px; border:none; background:none; color:#999;">取消</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
