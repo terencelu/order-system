@@ -50,7 +50,8 @@
                     <div class="menu-part">
                         <div id="normal-menu-grid" class="adaptive-grid"></div>
                         <div class="card info-box">
-                            <input type="text" id="cust-name" placeholder="顧客名稱" class="modern-input" oninput="syncPreview()">
+                            <input type="text" id="cust-name" placeholder="顧客名稱" class="modern-input" oninput="syncPreview()" style="margin-bottom:10px;">
+                            <input type="tel" id="cust-phone" placeholder="電話號碼" class="modern-input" oninput="syncPreview()">
                         </div>
                     </div>
                     <div class="cart-part">
@@ -109,8 +110,21 @@
             </div>
 
             <section id="common-history" class="card" style="margin-top:20px;">
-                <h3 class="section-title">📋 訂單紀錄</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 class="section-title" style="margin:0;">📋 訂單紀錄</h3>
+                    <button onclick="archiveOrders()" style="padding: 8px 15px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">📦 歸檔完成訂單</button>
+                </div>
                 <div id="order-history-list" class="history-grid"></div>
+
+                <hr style="margin: 20px 0; border: 0; border-top: 1px dashed #ccc;">
+
+                <div id="archive-section">
+                    <div onclick="toggleArchiveCollapse()" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                        <h3 class="section-title" style="margin:0;">📜 歷史訂單</h3>
+                        <span id="archive-arrow">▼</span>
+                    </div>
+                    <div id="archive-list" class="history-grid collapsed-preview" style="margin-top: 15px;"></div>
+                </div>
             </section>
         </main>
     </div>

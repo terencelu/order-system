@@ -23,6 +23,7 @@ function checkoutFast() {
     if(!fastCart.length) return;
     orders.unshift({
         name: "快速-" + sn++,
+        phone: "",
         content: fastCart.map(c => `${c.name}x${c.qty}`).join(","),
         total: document.getElementById('fast-total').innerText,
         status: "製作完成",

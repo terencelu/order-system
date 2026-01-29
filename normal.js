@@ -3,9 +3,25 @@ let selItem = null;
 
 function initNormal() {
     const grid = document.getElementById('normal-menu-grid');
-    grid.innerHTML = menu.map((m, i) => `<div class="card" onclick="openQtyModal(${i})" style="text-align:center; cursor:pointer; font-weight:bold; border-bottom:4px solid var(--blue);">${m.name}<br>$${m.price}</div>`).join("");
+    grid.innerHTML = menu.map((m, i) => `
+        <div class="card" style="text-align:center; position:relative; border-bottom:4px solid var(--blue);">
+            <div onclick="openQtyModal(${i})" style="cursor:pointer; font-weight:bold;">
+                ${m.name}<br>$${m.price}
+            </div>
+            <button onclick="editItem(${i})" style="margin-top:8px; font-size:12px; border:none; background:#f0f0f0; border-radius:4px; cursor:pointer; padding:2px 8px;">✏️ 編輯</button>
+        </div>`).join("");
     document.getElementById('cur-sn').innerText = sn;
     renderNormalCart(); syncPreview();
+}
+
+function editItem(idx) {
+    const newName = prompt("修改口味名稱", menu[idx].name);
+    const newPrice = prompt("修改價格", menu[idx].price);
+    if (newName && newPrice) {
+        menu[idx].name = newName;
+        menu[idx].price = parseInt(newPrice);
+        saveAll(); initNormal();
+    }
 }
 
 function openQtyModal(idx) {
@@ -43,23 +59,27 @@ function renderNormalCart() {
 }
 
 function syncPreview() {
-    document.getElementById('preview-name').innerText = "顧客：" + (document.getElementById('cust-name').value || ("客人" + sn));
+    const name = document.getElementById('cust-name').value || ("客人" + sn);
+    const phone = document.getElementById('cust-phone').value;
+    document.getElementById('preview-name').innerText = "顧客：" + name + (phone ? ` (${phone})` : "");
 }
 
 function checkoutNormal() {
     if(!normalCart.length) return;
     orders.unshift({
         name: document.getElementById('cust-name').value || ("客人" + sn++),
+        phone: document.getElementById('cust-phone').value || "",
         content: normalCart.map(c => `${c.name}x${c.qty}`).join(","),
         total: document.getElementById('normal-total').innerText,
         status: "製作中",
         time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
     });
-    normalCart = []; document.getElementById('cust-name').value = "";
+    normalCart = []; 
+    document.getElementById('cust-name').value = "";
+    document.getElementById('cust-phone').value = "";
     saveAll(); initNormal();
 }
 
-// 開發者功能開關
 function toggleDevSection() {
     const sec = document.getElementById('dev-section');
     sec.style.display = (sec.style.display === 'none') ? 'block' : 'none';

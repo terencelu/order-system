@@ -21,3 +21,11 @@ body { margin: 0; background: var(--bg); font-family: sans-serif; }
 .order-card.製作中 { border-left: 15px solid var(--orange); background: #fff9e6; }
 .order-card.製作完成 { border-left: 15px solid var(--success); background: #eefdf5; }
 .watermark { position: absolute; right: -5px; bottom: -5px; font-size: 40px; font-weight: 900; opacity: 0.1; pointer-events: none; }
+
+.history-grid.collapsed-preview {
+    max-height: 250px;
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}
+.history-grid.expanded { max-height: none; mask-image: none; }

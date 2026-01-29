@@ -4,7 +4,9 @@ let menu = JSON.parse(localStorage.getItem('myMenu')) || [
     { name: "焦糖海鹽", price: 100 }, { name: "開心堅果", price: 100 }
 ];
 let orders = JSON.parse(localStorage.getItem('myOrders')) || [];
+let archives = JSON.parse(localStorage.getItem('myArchives')) || [];
 let sn = parseInt(localStorage.getItem('sn')) || 1;
+let isArchiveExpanded = false;
 
 function showHomeButtons() {
     document.getElementById('home-actions').style.display = 'flex';
@@ -28,11 +30,14 @@ function renderOrders() {
     const list = document.getElementById('order-history-list');
     list.innerHTML = orders.map((o, i) => `
         <div class="order-card ${o.status}" onclick="toggleStatus(${i})">
-            <b>${o.name}</b> <span style="float:right;">$${o.total}</span>
+            <b>${o.name}</b> 
+            ${o.phone ? `<small style="display:block; color:#666;">📞 ${o.phone}</small>` : ''}
+            <span style="float:right;">$${o.total}</span>
             <div style="margin:5px 0;">${o.content}</div>
             <small>${o.time}</small>
             <div class="watermark">${o.status}</div>
         </div>`).join("");
+    renderArchives();
 }
 
 function toggleStatus(i) {
@@ -40,8 +45,45 @@ function toggleStatus(i) {
     saveAll();
 }
 
+function archiveOrders() {
+    const completed = orders.filter(o => o.status === "製作完成");
+    if (completed.length === 0) return alert("沒有已完成訂單");
+    archives = [...completed, ...archives];
+    orders = orders.filter(o => o.status !== "製作完成");
+    saveAll();
+}
+
+function renderArchives() {
+    const list = document.getElementById('archive-list');
+    list.innerHTML = archives.map(o => `
+        <div class="order-card 製作完成" style="opacity: 0.7; cursor: default;">
+            <b>${o.name}</b> 
+            ${o.phone ? `<small style="display:block; color:#666;">📞 ${o.phone}</small>` : ''}
+            <span style="float:right;">$${o.total}</span>
+            <div style="margin:5px 0;">${o.content}</div>
+            <small>${o.time}</small>
+            <div class="watermark" style="font-size: 25px;">歷史</div>
+        </div>`).join("");
+}
+
+function toggleArchiveCollapse() {
+    isArchiveExpanded = !isArchiveExpanded;
+    const list = document.getElementById('archive-list');
+    const arrow = document.getElementById('archive-arrow');
+    if (isArchiveExpanded) {
+        list.classList.remove('collapsed-preview');
+        list.classList.add('expanded');
+        arrow.innerText = "▲";
+    } else {
+        list.classList.add('collapsed-preview');
+        list.classList.remove('expanded');
+        arrow.innerText = "▼";
+    }
+}
+
 function saveAll() {
     localStorage.setItem('myOrders', JSON.stringify(orders));
+    localStorage.setItem('myArchives', JSON.stringify(archives));
     localStorage.setItem('sn', sn);
     localStorage.setItem('myMenu', JSON.stringify(menu));
     renderOrders();
