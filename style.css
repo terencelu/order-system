@@ -1,45 +1,61 @@
 :root {
-    --color-blue: #4361ee;
-    --color-green: #2ec4b6;
-    --color-success: #1b8d52;
-    --color-orange: #f39c12;
-    --color-danger: #ef233c;
-    --grad-green: linear-gradient(135deg, #2ec4b6 0%, #1b8d52 100%);
+    --blue: #4361ee; --green: #2ec4b6; --success: #1b8d52; --danger: #ef233c; --bg: #f0f2f5;
 }
-
-/* 全域設定 */
-html, body { margin: 0; padding: 0; height: 100%; font-family: sans-serif; background: #f0f2f5; overflow: hidden; }
-.screen { display: none; height: 100vh; width: 100vw; position: relative; overflow-y: auto; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body, html { margin: 0; padding: 0; height: 100%; font-family: sans-serif; background: var(--bg); overflow: hidden; }
+.screen { display: none; height: 100vh; overflow-y: auto; }
 .screen.active { display: block; }
 
-/* 1. 首頁：確保 Logo 顯示 */
+/* 首頁背景與排版 */
 #home-screen { background: #000; }
 .home-bg { position: absolute; width:100%; height:100%; background: url('https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200') center/cover; filter: brightness(0.3); }
-.home-container { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: white; }
-.logo-circle { width: 140px; height: 140px; background: white; border-radius: 50%; overflow: hidden; margin-bottom: 20px; border: 4px solid white; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+.home-container { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: #fff; }
+.logo-circle { width: 120px; height: 120px; background: white; border-radius: 50%; border: 4px solid white; overflow: hidden; margin-bottom: 10px; }
 .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
+.brand-title { font-size: 3.5rem; margin: 0; letter-spacing: 5px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
 
-/* 首頁按鈕 */
-.home-btn-group { display: none; gap: 15px; width: 85%; max-width: 500px; }
-.btn-home { flex: 1; border: none; padding: 22px 5px; border-radius: 18px; color: white !important; font-weight: bold; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.4); }
-.grad-blue { background: linear-gradient(135deg, #4361ee, #4cc9f0) !important; }
-.grad-green { background: var(--grad-green) !important; }
-.grad-purple { background: linear-gradient(135deg, #7209b7, #b5179e) !important; }
+/* 首頁按鈕跑版修正 */
+.home-btn-group { display: none; gap: 15px; margin-top: 30px; width: 90%; max-width: 600px; flex-wrap: wrap; justify-content: center; }
+.btn-home { flex: 1; min-width: 160px; min-height: 80px; border: none; border-radius: 20px; color: #fff; font-weight: bold; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+.grad-blue { background: linear-gradient(135deg, #4361ee, #4cc9f0); }
+.grad-green { background: linear-gradient(135deg, #2ec4b6, #1b8d52); }
+.grad-purple { background: linear-gradient(135deg, #7209b7, #b5179e); }
 
-/* 2. 顧客與預覽區 */
-.customer-info-box { background: white; padding: 20px; border-radius: 15px; border-left: 12px solid var(--color-blue); margin-bottom: 15px; }
-.input-modern { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 12px; font-size: 18px; margin-bottom: 10px; box-sizing: border-box; }
+/* 介面容器 */
+.responsive-container { max-width: 1400px; margin: 0 auto; padding: 15px; }
+.mode-container { width: 100%; }
+.split-layout { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 1024px) { .split-layout { grid-template-columns: 1fr 400px; } }
 
-/* 3. 目前訂單加重版 */
-.order-card { position: relative; padding: 20px; border-radius: 20px; border: 2px solid #ddd; margin-bottom: 15px; overflow: hidden; }
-.order-card.製作中 { border-left: 18px solid var(--color-orange); background: #fff4d1; }
-.order-card.製作完成 { border-left: 18px solid var(--color-success); background: #d8f3e5; }
-.watermark { position: absolute; right: -10px; bottom: -10px; font-size: 70px; font-weight: 900; opacity: 0.15; transform: rotate(-10deg); pointer-events: none; }
+.adaptive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.card { background: #fff; padding: 20px; border-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+.sticky-box { position: sticky; top: 15px; }
 
-/* 4. 彈窗與鍵盤 */
+/* 顧客資訊與輸入 */
+.info-input-group { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+.input-item { flex: 1; min-width: 180px; display: flex; flex-direction: column; }
+.full-width { flex: 1 1 100%; }
+.modern-input { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 12px; font-size: 1rem; background: #fafafa; }
+
+/* 價格與按鈕 */
+.big-price-ui { font-size: 3rem; font-weight: 900; text-align: right; color: var(--blue); margin: 10px 0; }
+.small-price-ui { font-size: 2rem; font-weight: 900; text-align: right; margin: 10px 0; }
+.action-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
+.btn-ok-ui, .btn-order-ui { background: var(--success); color: #fff; border: none; padding: 20px; border-radius: 18px; font-weight: bold; cursor: pointer; font-size: 1.2rem; }
+.btn-clear-ui { background: #eee; border: none; border-radius: 18px; cursor: pointer; font-weight: bold; }
+
+/* 分析模式 */
+.analysis-flex { display: flex; flex-wrap: wrap; gap: 20px; }
+.chart-box, .table-box { flex: 1; min-width: 320px; }
+.canvas-wrapper { position: relative; width: 100%; height: 300px; }
+.pos-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.pos-table th { background: var(--blue); color: #fff; padding: 12px; border-radius: 5px; }
+.pos-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
+
+/* 彈窗 */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; display: flex; align-items: center; justify-content: center; }
+.modal-content { background: #fff; width: 90%; max-width: 380px; padding: 30px; border-radius: 30px; text-align: center; }
+.modal-num-input { width: 100%; text-align: center; font-size: 3.5rem; border: none; font-weight: bold; color: var(--blue); outline: none; }
 .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-.numpad button { padding: 15px; font-size: 20px; border-radius: 10px; border: 1px solid #eee; background: #fff; cursor: pointer; }
-.btn-clear-sm { padding: 4px 10px; font-size: 12px; font-weight: bold; color: #888; background: #eee; border: none; border-radius: 6px; cursor: pointer; }
-
-/* 開發者模式隱藏 */
-.dev-only { display: none; margin-top: 15px; padding: 15px; border: 2px dashed #f00; border-radius: 15px; }
+.numpad button { aspect-ratio: 1/0.8; font-size: 1.4rem; font-weight: bold; border: 1px solid #eee; background: #fff; border-radius: 15px; cursor: pointer; }
+.btn-modal-action { width: 100%; padding: 20px; border: none; border-radius: 15px; color: #fff; font-size: 1.2rem; font-weight: bold; background: var(--blue); cursor: pointer; }
