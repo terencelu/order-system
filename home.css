@@ -1,0 +1,23 @@
+:root { --blue: #4361ee; --green: #2ec4b6; --orange: #f39c12; --success: #1b8d52; --bg: #f8f9fa; }
+body { margin: 0; background: var(--bg); font-family: sans-serif; }
+.screen { display: none; }
+.screen.active { display: block; }
+.app-header { background: #fff; padding: 10px 20px; border-bottom: 1px solid #ddd; }
+.responsive-container { padding: 20px; max-width: 1200px; margin: auto; }
+.card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+.home-bg { position: fixed; inset: 0; background: #333; filter: brightness(0.4); }
+.home-container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: white; }
+.logo-circle { width: 100px; height: 100px; background: #fff; border-radius: 50%; overflow: hidden; margin-bottom: 20px; }
+.logo-circle img { width: 100%; height: 100%; object-fit: cover; }
+.home-btn-group { display: none; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
+.btn-home { min-width: 140px; height: 70px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; }
+.grad-blue { background: linear-gradient(135deg, #4361ee, #4cc9f0); }
+.grad-green { background: linear-gradient(135deg, #2ec4b6, #1b8d52); }
+.grad-purple { background: linear-gradient(135deg, #7209b7, #b5179e); }
+
+.history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+.order-card { position: relative; padding: 15px; border-radius: 15px; border: 2px solid #ddd; cursor: pointer; overflow: hidden; }
+.order-card.製作中 { border-left: 15px solid var(--orange); background: #fff9e6; }
+.order-card.製作完成 { border-left: 15px solid var(--success); background: #eefdf5; }
+.watermark { position: absolute; right: -5px; bottom: -5px; font-size: 40px; font-weight: 900; opacity: 0.1; pointer-events: none; }

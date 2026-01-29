@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>胖可朗 POS 系統</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="fast.css">
+    <link rel="stylesheet" href="normal.css">
+    <link rel="stylesheet" href="analysis.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="init-body">
+<body>
     <div id="home-screen" class="screen active" onclick="showHomeButtons()">
         <div class="home-bg"></div>
         <div class="home-container">
-            <div class="logo-circle"><img src="pic/logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/150?text=Logo'"></div>
+            <div class="logo-circle"><img src="pic/logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/150'"></div>
             <h1 class="brand-title">胖可朗</h1>
             <div id="home-actions" class="home-btn-group">
                 <button class="btn-home grad-blue" onclick="enterMode('fast', event)">快速模式</button>
@@ -23,101 +26,116 @@
 
     <div id="app-screen" class="screen">
         <header class="app-header">
-            <h2 onclick="location.reload()" style="cursor:pointer;">胖可朗 POS</h2>
-            <button id="dev-toggle-btn" onclick="toggleDev()">⚙️ 開發者: OFF</button>
+            <h2 onclick="location.reload()">胖可朗 POS</h2>
         </header>
 
         <main class="responsive-container">
             <div id="container-fast" class="mode-container" style="display:none;">
-                <div class="split-layout">
+                <div class="fast-layout">
+                    <div id="fast-menu-grid" class="adaptive-grid"></div>
+                    <div class="card fast-cart-box">
+                        <h3>🛒 快速加點</h3>
+                        <div id="fast-cart-list"></div>
+                        <div class="big-price">Total: $<span id="fast-total">0</span></div>
+                        <div class="fast-btn-group">
+                            <button class="btn-clear" onclick="clearFastCart()">❌ 清除</button>
+                            <button class="btn-ok" onclick="checkoutFast()">✅ 完成</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="container-normal" class="mode-container" style="display:none;">
+                <div class="normal-layout">
                     <div class="menu-part">
-                        <h3 class="section-title">⚡ 快速點餐</h3>
-                        <div id="fast-menu-grid" class="adaptive-grid"></div>
+                        <div id="normal-menu-grid" class="adaptive-grid"></div>
+                        <div class="card info-box">
+                            <input type="text" id="cust-name" placeholder="顧客名稱" class="modern-input" oninput="syncPreview()">
+                        </div>
                     </div>
                     <div class="cart-part">
                         <div class="card sticky-box">
-                            <h3 class="section-title">🛒 當前點餐</h3>
-                            <div id="fast-cart-list" class="list-display"></div>
-                            <div class="big-price-ui">Total: $<span id="fast-total-price">0</span></div>
-                            <div class="action-grid">
-                                <button onclick="openFastConfirm('clear')" class="btn-clear-ui">❌ 全取消</button>
-                                <button onclick="openFastConfirm('checkout')" class="btn-ok-ui">✅ 完成訂單</button>
+                            <h3 id="preview-name">顧客：載入中...</h3>
+                            <div id="normal-cart-list"></div>
+                            <div class="small-price">Total: $<span id="normal-total">0</span></div>
+                            <button class="btn-order-ui" onclick="checkoutNormal()">確認出單 🚀</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dev-wrapper" style="margin-top: 30px;">
+                    <button id="dev-toggle-btn" class="btn-dev-trigger" onclick="toggleDevSection()">⚙️ 管理員設定</button>
+                    <div id="dev-section" class="card dev-tool-area" style="display:none;">
+                        <h4>🛠️ 後台管理</h4>
+                        <div class="dev-flex">
+                            <div class="dev-item">
+                                <label>新增口味</label>
+                                <input type="text" id="new-item-name" placeholder="品項" class="dev-input">
+                                <input type="number" id="new-item-price" placeholder="價格" class="dev-input">
+                                <button onclick="addNewItem()">新增</button>
+                            </div>
+                            <div class="dev-item">
+                                <label>流水號 (目前: <span id="cur-sn">1</span>)</label>
+                                <input type="number" id="set-sn" placeholder="新編號" class="dev-input">
+                                <button onclick="resetSN()">修改</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <section class="card history-section">
-                    <h3 class="section-title">📋 快速模式紀錄</h3>
-                    <div id="fast-history-list" class="history-grid"></div>
-                </section>
-            </div>
-
-            <div id="container-normal" class="mode-container" style="display:none;">
-                <div class="split-layout">
-                    <div class="menu-part">
-                        <section class="card">
-                            <h3 class="section-title">🍕 選擇口味</h3>
-                            <div id="normal-menu-grid" class="adaptive-grid"></div>
-                        </section>
-                        <section class="card">
-                            <h3 class="section-title">👤 顧客資訊</h3>
-                            <div class="info-input-group">
-                                <div class="input-item"><label>顧客名稱</label><input type="text" id="cust-name" class="modern-input" oninput="syncPreview()"></div>
-                                <div class="input-item"><label>電話</label><input type="tel" id="cust-phone" class="modern-input"></div>
-                                <div class="input-item full-width"><label>備註</label><textarea id="cust-note" class="modern-input" rows="2"></textarea></div>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="cart-part">
-                        <section class="card sticky-box">
-                            <h3 class="section-title">🛒 訂單預覽</h3>
-                            <div class="badge-info"><div id="preview-name">顧客：載入中...</div></div>
-                            <div id="normal-cart-list" class="list-display"></div>
-                            <div class="small-price-ui">Total: $<span id="normal-total-price">0</span></div>
-                            <button onclick="checkoutNormal()" class="btn-order-ui">確認出單 🚀</button>
-                        </section>
-                    </div>
-                </div>
-                <section class="card history-section">
-                    <h3 class="section-title">📋 一般模式紀錄</h3>
-                    <div id="normal-history-list" class="history-grid"></div>
-                </section>
             </div>
 
             <div id="container-analysis" class="mode-container" style="display:none;">
-                <div class="hero-card"><small>總營業額</small><div id="total-revenue" class="revenue-number">$0</div></div>
-                <div class="analysis-flex">
-                    <div class="card chart-box"><h4>🍕 口味比例</h4><div class="canvas-wrapper"><canvas id="flavorChart"></canvas></div></div>
-                    <div class="card table-box"><h4>📈 數據排行</h4><table id="flavor-table" class="pos-table"><thead><tr><th>口味</th><th>數量</th><th>比率</th></tr></thead><tbody></tbody></table></div>
-                </div>
-                <div class="card full-width" style="margin-top:20px;">
-                    <h4>⏰ 點餐時間分佈</h4>
-                    <div class="canvas-wrapper" style="height:300px;"><canvas id="timeChart"></canvas></div>
+                <div class="analysis-grid">
+                    <div class="card revenue-card">
+                        <small>總營業額</small>
+                        <div id="total-revenue" class="revenue-number">$0</div>
+                    </div>
+                    <div class="card chart-box">
+                        <h4>🍕 口味比例</h4>
+                        <div class="canvas-container"><canvas id="flavorChart"></canvas></div>
+                    </div>
+                    <div class="card table-box full-width-card">
+                        <h4>📈 數據排行 (已整合)</h4>
+                        <table id="flavor-table" class="analysis-table">
+                            <thead><tr><th>口味</th><th>數量</th><th>百分比</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="card full-width-card">
+                        <h4>⏰ 時間分布</h4>
+                        <div class="canvas-container" style="height:250px;"><canvas id="timeChart"></canvas></div>
+                    </div>
                 </div>
             </div>
+
+            <section id="common-history" class="card" style="margin-top:20px;">
+                <h3 class="section-title">📋 訂單紀錄</h3>
+                <div id="order-history-list" class="history-grid"></div>
+            </section>
         </main>
     </div>
 
-    <div id="global-modal" class="modal-overlay" onclick="closeModal()" style="display:none;">
+    <div id="qty-modal" class="modal-overlay" onclick="closeQtyModal()" style="display:none;">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <div id="modal-qty-zone" style="display:none;">
-                <h2 id="target-item-name"></h2>
+            <h2 id="target-item-name">品項</h2>
+            <div class="qty-control-row">
+                <button class="btn-qty-adj" onclick="adjustQty(-1)">-</button>
                 <input type="number" id="target-qty" value="1" readonly class="modal-num-input">
-                <div class="numpad">
-                    <button onclick="pressNum('1')">1</button><button onclick="pressNum('2')">2</button><button onclick="pressNum('3')">3</button>
-                    <button onclick="pressNum('4')">4</button><button onclick="pressNum('5')">5</button><button onclick="pressNum('6')">6</button>
-                    <button onclick="pressNum('7')">7</button><button onclick="pressNum('8')">8</button><button onclick="pressNum('9')">9</button>
-                    <button onclick="pressNum('C')" class="btn-clear">C</button><button onclick="pressNum('0')">0</button>
-                    <button onclick="confirmNormalAdd()" class="btn-confirm">OK</button>
-                </div>
+                <button class="btn-qty-adj" onclick="adjustQty(1)">+</button>
             </div>
-            <div id="modal-confirm-zone" style="display:none;">
-                <h2 id="fast-confirm-title"></h2>
-                <button id="fast-execute-btn" class="btn-modal-action" style="margin-top:20px;">確認執行</button>
+            <div class="numpad">
+                <button onclick="pressNum('1')">1</button><button onclick="pressNum('2')">2</button><button onclick="pressNum('3')">3</button>
+                <button onclick="pressNum('4')">4</button><button onclick="pressNum('5')">5</button><button onclick="pressNum('6')">6</button>
+                <button onclick="pressNum('7')">7</button><button onclick="pressNum('8')">8</button><button onclick="pressNum('9')">9</button>
+                <button onclick="pressNum('C')">C</button><button onclick="pressNum('0')">0</button>
+                <button onclick="confirmNormalAdd()" style="background:var(--blue); color:#fff;">確認</button>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="home.js"></script>
+    <script src="fast.js"></script>
+    <script src="normal.js"></script>
+    <script src="analysis.js"></script>
 </body>
 </html>

@@ -1,0 +1,8 @@
+#container-fast { background: #eef2f7; padding: 20px; border-radius: 25px; }
+.fast-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+@media (max-width: 768px) { .fast-layout { grid-template-columns: 1fr; } }
+.adaptive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+.big-price { font-size: 2.5rem; font-weight: 900; color: var(--blue); text-align: right; }
+.fast-btn-group { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
+.fast-btn-group button { padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; }
+.btn-ok { background: var(--success); color: white; }
