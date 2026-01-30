@@ -8,7 +8,7 @@ function initFast() {
 
     if (isDevMode) {
         html += `
-        <div class="card" onclick="alert('快速模式新增')" style="text-align:center; display:flex; align-items:center; justify-content:center; cursor:pointer; border:2px dashed #ccc; background:none; font-size:2rem; color:#999;">
+        <div class="card" onclick="alert('快速模式新增hhee')" style="text-align:center; display:flex; align-items:center; justify-content:center; cursor:pointer; border:2px dashed #ccc; background:none; font-size:2rem; color:#999;">
             +
         </div>`;
     }
