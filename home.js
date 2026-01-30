@@ -8,11 +8,18 @@ let archives = JSON.parse(localStorage.getItem('myArchives')) || [];
 let sn = parseInt(localStorage.getItem('sn')) || 1;
 let isArchiveExpanded = false;
 
+let longPressTimer;
+let selectedOrderIdx = null;
+let currentMode = ''; // 用於紀錄當前模式
+
+let isDevMode = false;
+
 function showHomeButtons() {
     document.getElementById('home-actions').style.display = 'flex';
 }
 
 function enterMode(mode, event) {
+    currentMode = mode; // 儲存當前進入的模式
     if(event) event.stopPropagation();
     document.getElementById('home-screen').classList.remove('active');
     document.getElementById('app-screen').classList.add('active');
@@ -29,7 +36,12 @@ function enterMode(mode, event) {
 function renderOrders() {
     const list = document.getElementById('order-history-list');
     list.innerHTML = orders.map((o, i) => `
-        <div class="order-card ${o.status}" onclick="toggleStatus(${i})">
+        <div class="order-card ${o.status}" 
+             onmousedown="startPress(${i})" 
+             onmouseup="endPress(${i})" 
+             ontouchstart="startPress(${i})" 
+             ontouchend="endPress(${i})"
+             onclick="handleOrderClick(${i})">
             <b>${o.name}</b> 
             ${o.phone ? `<small style="display:block; color:#666;">📞 ${o.phone}</small>` : ''}
             <span style="float:right;">$${o.total}</span>
@@ -38,6 +50,41 @@ function renderOrders() {
             <div class="watermark">${o.status}</div>
         </div>`).join("");
     renderArchives();
+}
+
+function handleOrderClick(i) {
+    // 只有在不是長按觸發的情況下才切換狀態
+    if (!selectedOrderIdx !== null) {
+        toggleStatus(i);
+    }
+}
+
+function startPress(i) {
+    longPressTimer = setTimeout(() => {
+        if (currentMode === 'fast') {
+            selectedOrderIdx = i;
+            document.getElementById('order-action-modal').style.display = 'flex';
+        }
+    }, 800); // 設定長按 800 毫秒觸發
+}
+
+function endPress() {
+    clearTimeout(longPressTimer);
+}
+
+function closeActionModal() {
+    document.getElementById('order-action-modal').style.display = 'none';
+    selectedOrderIdx = null;
+}
+
+function deleteOrder() {
+    if (selectedOrderIdx !== null) {
+        if (confirm("確定要刪除這筆訂單嗎？")) {
+            orders.splice(selectedOrderIdx, 1);
+            saveAll();
+            closeActionModal();
+        }
+    }
 }
 
 function toggleStatus(i) {
@@ -87,4 +134,16 @@ function saveAll() {
     localStorage.setItem('sn', sn);
     localStorage.setItem('myMenu', JSON.stringify(menu));
     renderOrders();
+}
+
+function toggleDevMode() {
+    isDevMode = !isDevMode;
+    // 背景轉黑
+    document.body.style.backgroundColor = isDevMode ? "#1a1a1a" : "var(--bg)";
+    document.getElementById('dev-mode-btn').innerText = isDevMode ? "🌙 關閉開發者模式" : "🛠️ 開發者功能";
+
+    // 重新渲染三個部分的內容
+    if(typeof initNormal === 'function') initNormal();
+    if(typeof initFast === 'function') initFast();
+    renderArchives();
 }

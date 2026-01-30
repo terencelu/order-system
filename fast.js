@@ -1,7 +1,19 @@
 let fastCart = [];
 function initFast() {
     const grid = document.getElementById('fast-menu-grid');
-    grid.innerHTML = menu.map((m, i) => `<div class="card" onclick="addFast(${i})" style="text-align:center; cursor:pointer; font-weight:bold; border-bottom:4px solid var(--blue);">${m.name}<br>$${m.price}</div>`).join("");
+    let html = menu.map((m, i) => `
+        <div class="card" onclick="addFast(${i})" style="text-align:center; cursor:pointer; font-weight:bold; border-bottom:4px solid var(--blue);">
+            ${m.name}<br>$${m.price}
+        </div>`).join("");
+
+    if (isDevMode) {
+        html += `
+        <div class="card" onclick="alert('快速模式新增')" style="text-align:center; display:flex; align-items:center; justify-content:center; cursor:pointer; border:2px dashed #ccc; background:none; font-size:2rem; color:#999;">
+            +
+        </div>`;
+    }
+
+    grid.innerHTML = html;
     renderFastCart();
 }
 function addFast(idx) {
@@ -26,7 +38,7 @@ function checkoutFast() {
         phone: "",
         content: fastCart.map(c => `${c.name}x${c.qty}`).join(","),
         total: document.getElementById('fast-total').innerText,
-        status: "製作完成",
+        status: "製作中",
         time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
     });
     fastCart = []; saveAll(); renderFastCart();

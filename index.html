@@ -111,7 +111,7 @@
 
             <section id="common-history" class="card" style="margin-top:20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 class="section-title" style="margin:0;">📋 訂單紀錄</h3>
+                    <h3 class="section-title" style="margin:0;">📋 訂單紀錄(長按可編輯)</h3>
                     <button onclick="archiveOrders()" style="padding: 8px 15px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">📦 歸檔完成訂單</button>
                 </div>
                 <div id="order-history-list" class="history-grid"></div>
@@ -124,6 +124,11 @@
                         <span id="archive-arrow">▼</span>
                     </div>
                     <div id="archive-list" class="history-grid collapsed-preview" style="margin-top: 15px;"></div>
+                </div>
+                <div style="margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 15px;">
+                    <button id="dev-mode-btn" onclick="toggleDevMode()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #ddd; background: #f8f9fa; cursor: pointer; color: #666; font-size: 14px;">
+                        🛠️ 開發者模式
+                    </button>
                 </div>
             </section>
         </main>
@@ -144,6 +149,20 @@
                 <button onclick="pressNum('C')">C</button><button onclick="pressNum('0')">0</button>
                 <button onclick="confirmNormalAdd()" style="background:var(--blue); color:#fff;">確認</button>
             </div>
+        </div>
+    </div>
+
+    <div id="order-action-modal" class="modal-overlay" onclick="closeActionModal()" style="display:none;">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3>訂單操作</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="edit-order-btn" class="btn-home" style="background: #ccc; cursor: not-allowed; position: relative;">
+                    修改
+                    <small style="display: block; font-size: 10px; font-weight: normal; margin-top: 4px;">快速模式無法修改</small>
+                </button>
+                <button onclick="deleteOrder()" class="btn-home" style="background: #ef233c;">刪除訂單</button>
+            </div>
+            <button onclick="closeActionModal()" style="margin-top: 15px; border: none; background: none; color: #666;">取消</button>
         </div>
     </div>
 
