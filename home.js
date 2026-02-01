@@ -103,7 +103,7 @@ function archiveOrders() {
 function renderArchives() {
     const list = document.getElementById('archive-list');
     list.innerHTML = archives.map(o => `
-        <div class="order-card 製作完成" style="opacity: 0.7; cursor: default;">
+        <div class="order-card 歷史" style="opacity: 0.7; cursor: default;">
             <b>${o.name}</b> 
             ${o.phone ? `<small style="display:block; color:#666;">📞 ${o.phone}</small>` : ''}
             <span style="float:right;">$${o.total}</span>
