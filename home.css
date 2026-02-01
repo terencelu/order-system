@@ -17,7 +17,18 @@ body { margin: 0; background: var(--bg); font-family: sans-serif; }
 .grad-purple { background: linear-gradient(135deg, #7209b7, #b5179e); }
 
 .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-.order-card { position: relative; padding: 15px; border-radius: 15px; border: 2px solid #ddd; cursor: pointer; overflow: hidden; }
+.order-card { 
+    position: relative; padding: 15px; border-radius: 15px; border: 2px solid #ddd; cursor: pointer; overflow: hidden; 
+    /* ...現有的設定... */
+    -webkit-user-select: none;  /* Chrome, Safari, Opera */
+    -moz-user-select: none;     /* Firefox */
+    -ms-user-select: none;      /* IE/Edge */
+    user-select: none;          /* Standard */
+    
+    /* 避免手機長按彈出系統選單 */
+    -webkit-touch-callout: none;
+}
+
 .order-card.製作中 { border-left: 15px solid var(--orange); background: #fff9e6; }
 .order-card.製作完成 { border-left: 15px solid var(--success); background: #eefdf5; }
 .watermark { position: absolute; right: -5px; bottom: -5px; font-size: 40px; font-weight: 900; opacity: 0.1; pointer-events: none; }
