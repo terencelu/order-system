@@ -78,14 +78,15 @@ function syncPreview() {
 }
 
 function checkoutNormal() {
-    if(!normalCart.length) return;
+if(!normalCart.length) return;
     orders.unshift({
         name: document.getElementById('cust-name').value || ("客人" + sn++),
         phone: document.getElementById('cust-phone').value || "",
         content: normalCart.map(c => `${c.name}x${c.qty}`).join(","),
         total: document.getElementById('normal-total').innerText,
         status: "製作中",
-        time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+        // 修改這一行
+        time: getCurrentDateTime() 
     });
     normalCart = []; 
     document.getElementById('cust-name').value = "";

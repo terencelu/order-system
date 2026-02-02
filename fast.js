@@ -34,12 +34,13 @@ function clearFastCart() { fastCart = []; renderFastCart(); }
 function checkoutFast() {
     if(!fastCart.length) return;
     orders.unshift({
-        name: "快速-" + sn++,
-        phone: "",
+        name: "快速訂單",
         content: fastCart.map(c => `${c.name}x${c.qty}`).join(","),
         total: document.getElementById('fast-total').innerText,
         status: "製作中",
-        time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+        // 修改這一行
+        time: getCurrentDateTime() 
     });
-    fastCart = []; saveAll(); renderFastCart();
+    clearFastCart();
+    saveAll();
 }

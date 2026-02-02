@@ -2,7 +2,7 @@
 body { margin: 0; background: var(--bg); font-family: sans-serif; }
 .screen { display: none; }
 .screen.active { display: block; }
-.app-header { background: #fff; padding: 10px 20px; border-bottom: 1px solid #ddd; }
+.app-header { background: #fffef9; padding: 10px 20px; border-bottom: 1px solid #ddd; }
 .responsive-container { padding: 20px; max-width: 1200px; margin: auto; }
 .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 
@@ -41,3 +41,13 @@ body { margin: 0; background: var(--bg); font-family: sans-serif; }
     mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
 }
 .history-grid.expanded { max-height: none; mask-image: none; }
+
+/* home.css 新增 */
+.btn-admin-data {
+    transition: background 0.3s, transform 0.1s;
+}
+
+.btn-admin-data:active {
+    background: #1d3557 !important; /* 按住時變深色 */
+    transform: scale(0.96);
+}
