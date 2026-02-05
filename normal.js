@@ -72,7 +72,7 @@ function renderNormalCart() {
 }
 
 function syncPreview() {
-    const name = document.getElementById('cust-name').value || ("客人" + sn);
+    const name = document.getElementById('cust-name').value || ("客人-" + sn);
     const phone = document.getElementById('cust-phone').value;
     document.getElementById('preview-name').innerText = "顧客：" + name + (phone ? ` (${phone})` : "");
 }
@@ -80,7 +80,7 @@ function syncPreview() {
 function checkoutNormal() {
 if(!normalCart.length) return;
     orders.unshift({
-        name: document.getElementById('cust-name').value || ("客人" + sn++),
+        name: document.getElementById('cust-name').value || ("客人-" + sn++),
         phone: document.getElementById('cust-phone').value || "",
         content: normalCart.map(c => `${c.name}x${c.qty}`).join(","),
         total: document.getElementById('normal-total').innerText,

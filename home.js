@@ -50,6 +50,8 @@ function getCurrentDateTime() {
 
 function renderOrders() {
     const list = document.getElementById('order-history-list');
+    // const reverseOrders = orders.reverse();
+    // list.innerHTML = reverseOrders.map((o, i) => `
     list.innerHTML = orders.map((o, i) => `
         <div class="order-card ${o.status}" 
              onmousedown="startPress(${i})" 

@@ -32,15 +32,22 @@ function renderFastCart() {
 }
 function clearFastCart() { fastCart = []; renderFastCart(); }
 function checkoutFast() {
-    if(!fastCart.length) return;
+    if (!fastCart.length) return;
+    
+    // 參考 normal.js 的邏輯，在名稱中加入當前的 sn，之後再將 sn 自增 1
     orders.unshift({
-        name: "快速訂單",
+        name: "快速-" + (sn++), 
+        phone: "",
         content: fastCart.map(c => `${c.name}x${c.qty}`).join(","),
         total: document.getElementById('fast-total').innerText,
         status: "製作中",
-        // 修改這一行
         time: getCurrentDateTime() 
     });
-    clearFastCart();
-    saveAll();
+
+    fastCart = [];
+    saveAll();     // 儲存狀態至 localStorage
+    initFast();    // 重新初始化快速模式介面
+    
+    // 若有需要，可以像 normal.js 一樣顯示當前流水號（選用）
+    // document.getElementById('cur-sn').innerText = sn; 
 }
