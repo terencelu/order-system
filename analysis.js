@@ -28,10 +28,16 @@ function initAnalysis() {
     });
     const timeData = new Array(24).fill(0);
     allData.forEach(o => {
-        let h = parseInt(o.time.split(':')[0]);
-        if(o.time.includes('下午') && h < 12) h += 12;
-        if(o.time.includes('上午') && h === 12) h = 0;
-        timeData[h]++;
+        const regex = /\d+\/\d+\s.*?(?<hour>\d+)\:\d+/;
+        const match = o.time.match(regex);
+        
+        if (match && match.groups.hour) {
+            let h = parseInt(match.groups.hour);
+
+            if (h >= 0 && h < 24) {
+                timeData[h]++;
+            }
+        }
     });
     const ctx2 = document.getElementById('timeChart').getContext('2d');
     if(chart2) chart2.destroy();
