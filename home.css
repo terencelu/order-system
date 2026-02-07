@@ -12,23 +12,33 @@ body { margin: 0; background: var(--bg); font-family: sans-serif; }
 .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
 /* .home-btn-group { display: none; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; } */
 .home-btn-group {
-    display: flex; /* 確保原本的排版存在 */
+    display: flex;
+    flex-wrap: wrap; /* 必須允許換行 */
     gap: 15px;
-    margin-top: 20px;
-    flex-wrap: wrap;
     justify-content: center;
-    
-    /* 新增以下屬性控制漸變 */
-    visibility: hidden;
+    visibility: hidden; /* 保留你原本的隱藏設定 */
     opacity: 0;
-    transition: opacity 0.8s ease, visibility 0.8s; 
+    transition: opacity 0.8s ease, visibility 0.8s;
 }
-
 /* 新增一個 Class 用來控制顯示狀態 */
 .home-btn-group.show {
     visibility: visible;
     opacity: 1;
 }
+
+/* 讓第一個按鈕強制佔滿一整行 */
+.home-btn-group .btn-home:first-child {
+    font-size: 1.2rem;
+    flex: 0 0 100%; /* 不縮放、不延伸、基礎寬度 100% */
+}
+
+/* 讓下面兩個按鈕平分剩下的空間 (選用) */
+.home-btn-group .btn-home:not(:first-child) {
+    font-size: 1.2rem;
+    flex: 1; /* 這樣「一般模式」與「分析一下」會等寬並排 */
+    min-width: 120px; /* 避免在手機上縮太小 */
+}
+
 .btn-home { min-width: 140px; height: 70px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; }
 .grad-blue { background: linear-gradient(135deg, #4361ee, #4cc9f0); }
 .grad-green { background: linear-gradient(135deg, #2ec4b6, #1b8d52); }
@@ -60,12 +70,39 @@ body { margin: 0; background: var(--bg); font-family: sans-serif; }
 }
 .history-grid.expanded { max-height: none; mask-image: none; }
 
-/* home.css 新增 */
-.btn-admin-data {
-    transition: background 0.3s, transform 0.1s;
+.btn-dev-trigger { 
+    font-size: 1.2rem;
+    width: 100%; 
+    padding: 20px; 
+    background: #6c757d; 
+    color: white; 
+    border: none; 
+    border-radius: 10px; 
+    cursor: pointer; 
 }
 
+
+/* 長按進入後台按鈕 */
+.btn-admin-data {
+    font-size: 1.2rem;
+    width: 100%; 
+    padding: 20px; 
+    background-color: #457b9d;
+    color: white; 
+    border: none; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    
+    /* 避免手機長按時彈出選單 */
+    -webkit-user-select: none; 
+    user-select: none;
+    
+    /* 增加一點按壓下去的效果，讓長按更有感覺 */
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+/* 按下去時縮小一點點，模擬真實按鈕感 */
 .btn-admin-data:active {
-    background: #1d3557 !important; /* 按住時變深色 */
     transform: scale(0.96);
+    background: #1d3557 !important; /* 按住時變深色 */
 }
