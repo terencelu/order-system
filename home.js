@@ -21,7 +21,9 @@ let archivePressTimer;
 let archiveIdxToDelete = null; // 紀錄準備要刪除哪一條
 
 function showHomeButtons() {
-    document.getElementById('home-actions').style.display = 'flex';
+    // document.getElementById('home-actions').style.display = 'flex';
+    const actions = document.getElementById('home-actions');
+    actions.classList.add('show');
 }
 
 function enterMode(mode, event) {
@@ -91,6 +93,7 @@ function endPress() {
 
 function closeActionModal() {
     document.getElementById('order-action-modal').style.display = 'none';
+    // document.getElementById('order-action-modal').style.display = 'none';
     selectedOrderIdx = null;
 }
 

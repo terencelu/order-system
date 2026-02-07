@@ -10,7 +10,25 @@ body { margin: 0; background: var(--bg); font-family: sans-serif; }
 .home-container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: white; }
 .logo-circle { width: 100px; height: 100px; background: #fff; border-radius: 50%; overflow: hidden; margin-bottom: 20px; }
 .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
-.home-btn-group { display: none; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
+/* .home-btn-group { display: none; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; } */
+.home-btn-group {
+    display: flex; /* 確保原本的排版存在 */
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+    /* 新增以下屬性控制漸變 */
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.8s ease, visibility 0.8s; 
+}
+
+/* 新增一個 Class 用來控制顯示狀態 */
+.home-btn-group.show {
+    visibility: visible;
+    opacity: 1;
+}
 .btn-home { min-width: 140px; height: 70px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; }
 .grad-blue { background: linear-gradient(135deg, #4361ee, #4cc9f0); }
 .grad-green { background: linear-gradient(135deg, #2ec4b6, #1b8d52); }
