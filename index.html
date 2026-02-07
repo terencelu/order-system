@@ -18,7 +18,8 @@
             <h1 class="brand-title">- 胖可朗 PAN CLONG -</h1>
             <div id="home-actions" class="home-btn-group">
                 <button class="btn-home grad-blue" onclick="enterMode('fast', event)">快速模式</button>
-                <button class="btn-home grad-green" onclick="enterMode('normal', event)">一般模式</button>
+                <!-- <button class="btn-home grad-green" onclick="enterMode('normal', event)">一般模式</button> -->
+                <button class="btn-home grad-green" >一般模式</button>
                 <button class="btn-home grad-purple" onclick="enterMode('analysis', event)">分析一下</button>
             </div>
         </div>
@@ -28,9 +29,7 @@
         <header class="app-header">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <img onclick="location.reload()" src="pic/logo.jpg" width="100" alt="Logo" style="cursor: pointer;" onerror="this.src='https://via.placeholder.com/150'">
-                <!-- <h2 onclick="location.reload()" style="margin: 0; cursor: pointer;">回首頁</h2> -->
-
-                <img onclick="location.reload()" src="pic/pencil.png" width="40" alt="Logo" style="margin-left: auto;" onerror="this.src='https://via.placeholder.com/150'">
+                <img onclick="location.reload()" src="pic/pencil.png" width="40" alt="pencil" style="margin-left: auto; margin-right: 15px" onerror="this.src='https://via.placeholder.com/150'">
             </div>
         </header>
 
@@ -38,8 +37,18 @@
             <div id="container-fast" class="mode-container" style="display:none;">
                 <div class="fast-layout">
                     <div id="fast-menu-grid" class="adaptive-grid"></div>
+                    
                     <div class="card fast-cart-box">
-                        <h3>快速加點</h3>
+                        <!-- <div class="card mode-box">
+                            <button class="btn-mode-box" >快速模式</button>
+                            <button class="btn-mode-box" >一般模式</button>
+                        </div> -->
+                        <!-- <h3 id="fast-title">快速加點</h3> -->
+                        <div class="fast-title-container">
+                            <input type="text" id="fast-title-input" value="客人" readonly>
+                        </div>
+                        <!-- <button id="mode-fast" class="mode-btn active" onclick="setCartMode('fast')">快速模式</button>
+                        <button id="mode-normal" class="mode-btn" onclick="setCartMode('normal')">一般模式</button> -->
                         <div id="fast-cart-list"></div>
                         <div class="big-price">Total: $<span id="fast-total">0</span></div>
                         <div class="fast-btn-group">
@@ -117,7 +126,7 @@
             <section id="common-history" class="card" style="margin-top:20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h3 class="section-title" style="margin:0;">訂單紀錄(短按改狀態/長按可編輯)</h3>
-                    <button onclick="archiveOrders()" style="padding: 8px 15px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">📦 歸檔完成訂單</button>
+                    <button onclick="archiveOrders()" style="padding: 8px 15px; background: #0073ff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">歸檔完成訂單</button>
                 </div>
                 <div id="order-history-list" class="history-grid"></div>
 

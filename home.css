@@ -41,7 +41,8 @@ body { margin: 0; background: var(--bg); font-family: sans-serif; }
 
 .btn-home { min-width: 140px; height: 70px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; }
 .grad-blue { background: linear-gradient(135deg, #4361ee, #4cc9f0); }
-.grad-green { background: linear-gradient(135deg, #2ec4b6, #1b8d52); }
+/* .grad-green { background: linear-gradient(135deg, #2ec4b6, #1b8d52); } */
+.grad-green { background: linear-gradient(135deg, #abb3b1, #484b4a);color: black; }
 .grad-purple { background: linear-gradient(135deg, #7209b7, #b5179e); }
 
 .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
@@ -62,6 +63,21 @@ body { margin: 0; background: var(--bg); font-family: sans-serif; }
 .order-card.歷史 { border-left: 15px solid var(--history); background: #d6eafd; }
 .watermark { position: absolute; right: -5px; bottom: -5px; font-size: 40px; font-weight: 900; opacity: 0.1; pointer-events: none; }
 
+.mode-box {
+    display: flex;       /* 橫向排列 */
+    gap: 10px;          /* 按鈕間距 */
+    margin-bottom: 15px;
+}
+.btn-mode-box {
+    flex: 1;            /* 平分寬度 */
+    padding: 10px;
+    border: 1px solid var(--blue);
+    background: white;
+    color: var(--blue);
+    border-radius: 8px;
+    font-weight: bold;
+}
+
 .history-grid.collapsed-preview {
     max-height: 250px;
     overflow: hidden;
@@ -81,6 +97,28 @@ body { margin: 0; background: var(--bg); font-family: sans-serif; }
     cursor: pointer; 
 }
 
+.flavor {
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    background: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+/* 關鍵：過渡動畫 */
+    transition: transform 0.1s ease, background-color 0.2s, box-shadow 0.1s;
+    
+    /* 防止手機長按選取文字 */
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 按下時的視覺效果 */
+.flavor:active {
+    transform: scale(0.92);      /* 稍微縮小，看起來像被按進去 */
+    background-color: #f0f0f0;   /* 背景顏色稍微變深 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 陰影變小，增加沉入感 */
+}
 
 /* 長按進入後台按鈕 */
 .btn-admin-data {
@@ -105,4 +143,35 @@ body { margin: 0; background: var(--bg); font-family: sans-serif; }
 .btn-admin-data:active {
     transform: scale(0.96);
     background: #1d3557 !important; /* 按住時變深色 */
+}
+
+.fast-title-container {
+    margin: 10px 0;
+    text-align: center;
+}
+
+#fast-title-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+/* 當處於開發模式且可以編輯時的樣式 */
+#fast-title-input.editable {
+    background: #f0f4ff;
+    border: 2px dashed var(--blue);
+    color: var(--blue);
+    cursor: text;
+}
+
+#fast-title-input[readonly] {
+    cursor: default;
 }

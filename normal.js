@@ -5,8 +5,8 @@ function initNormal() {
     const grid = document.getElementById('normal-menu-grid');
     // 先渲染原本的菜單
     let html = menu.map((m, i) => `
-        <div class="card" style="text-align:center; position:relative; border-bottom:4px solid var(--blue);">
-            <div onclick="openQtyModal(${i})" style="cursor:pointer; font-weight:bold;">
+        <div class="flavor" style="text-align:center; position:relative; border-bottom:4px solid var(--blue);">
+            <div onclick="openQtyModal(${i})" style="background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor:pointer; font-weight:bold;">
                 ${m.name}<br>$${m.price}
             </div>
             <button onclick="editItem(${i})" style="margin-top:8px; font-size:12px; border:none; background:#f0f0f0; border-radius:4px; cursor:pointer; padding:2px 8px;">✏️ 編輯</button>
@@ -15,7 +15,7 @@ function initNormal() {
     // 如果是開發者模式，在最後面加上 [+] 按鈕
     if (isDevMode) {
         html += `
-            <div class="card" onclick="alert('新增')" style="
+            <div class="flavor" onclick="alert('新增')" style="
                 display: flex; align-items: center; justify-content: center;
                 cursor: pointer; border: 2px dashed #ccc; background: none;
                 font-size: 24px; font-weight: bold; color: #999;">
