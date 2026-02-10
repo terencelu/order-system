@@ -175,3 +175,21 @@ body { margin: 0; background: var(--bg); font-family: sans-serif; }
 #fast-title-input[readonly] {
     cursor: default;
 }
+
+/* 電腦版保持原樣，針對手機版進行調整 */
+@media (max-width: 768px) {
+    /* Logo 縮小 */
+    .app-header img[alt="Logo"] {
+        width: 60px !important; /* 原本 100px 太大，改為 60px */
+    }
+
+    /* 鉛筆圖示縮小 */
+    .app-header img[alt="pencil"] {
+        width: 25px !important; /* 原本 40px 太大，改為 25px */
+    }
+
+    /* 調整 Header 的間距，避免太擠 */
+    .app-header {
+        padding: 5px 10px;
+    }
+}
